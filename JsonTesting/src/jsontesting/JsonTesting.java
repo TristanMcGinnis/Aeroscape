@@ -4,9 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import org.json.*;
+
+//import org.json.*;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -45,29 +53,87 @@ public static void main(String[] args) {
         money.setToolTipText("Enter Money Balance");
         resources.setToolTipText("Enter Resources Count");        
 
-        // Create a JButton for determining odd/even
-        JButton button = new JButton("Check");
-        button.addActionListener(new ActionListener() {
+        // Create a JButton for submitting data to JSON log file
+        JButton log_button = new JButton("Log Data");
+        log_button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                
+                
+                File t = new File("saves/log.json");
+                if(t.exists())
+                {
+                    System.out.println("Log file already exists");
+                }else{
+                    System.out.println("Log file not found");
+                }
+                
+
+                
+                
                 String inputName = name.getText();
                 String inputLevel = level.getText();
                 String inputMoney = money.getText();
                 String inputResources = resources.getText();
                 
-                try {
-                    int num = Integer.parseInt(inputLevel);
-                    if (num % 2 == 0) {
-                        JOptionPane.showMessageDialog(null, "The number is even.");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "The number is odd.");
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Please enter a valid number.");
+                JSONObject obj = new JSONObject();
+                obj.put("username",inputName);
+                obj.put("playerLvl",inputLevel);
+                obj.put("moneyBal",inputMoney);
+                obj.put("resources",inputResources);
+                
+                try(FileWriter file = new FileWriter("saves/log.json"))
+                {
+                    file.write(obj.toString());
+                    file.flush();
+                    System.out.println("Successfully wrote to log file");
+                }catch (IOException f)  
+                {
+                    System.out.println("An error occurred in file writing");
                 }
+                
+                               
+                
+                JOptionPane.showMessageDialog(null, "Data saved to log.JSON");
                 
             }
         });
-        panel.add(button);
+        panel.add(log_button);
+        
+        // Create a JButton for loading data from log.JSON file
+        JButton load_button = new JButton("Load Existing Data");
+        load_button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent g) {
+                
+                
+                File t = new File("saves/log.json");
+                
+                try(FileReader reader = new FileReader("saves/log.json"))
+                {
+                    JSONParser parser = new JSONParser();
+                    JSONObject playerInfo = (JSONObject) parser.parse(reader);
+                    //System.out.println(playerInfo);
+                    name.setText((String) playerInfo.get("username"));
+                    level.setText((String) playerInfo.get("playerLvl"));
+                    money.setText((String) playerInfo.get("moneyBal"));
+                    resources.setText((String) playerInfo.get("resources"));
+                }catch(FileNotFoundException e)
+                {
+                    JOptionPane.showMessageDialog(null, "Existing log.JSON file not found");
+                }catch(IOException e)
+                {
+                    System.out.println("IO Exception error caught");
+                }catch(ParseException e)
+                {
+                    System.out.println("Parse Exception Caught");
+                }
+                    
+                
+                JOptionPane.showMessageDialog(null, "Data loaded from log.JSON");
+                
+            }
+        });
+        panel.add(load_button);
+        
 
         // Add the panel to the frame
         frame.add(panel);
