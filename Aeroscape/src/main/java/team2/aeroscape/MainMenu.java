@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package team2.aeroscape;
-
 /**
  *
  * @author nndcp
@@ -45,6 +44,8 @@ public final class MainMenu extends JFrame {
         newGameButton.addActionListener((ActionEvent e) -> {
             // Add code to start the game here
             System.out.println("Creating new game...");
+            Aeroscape initialize = new Aeroscape(); 
+            initialize.init(); 
         });
         
         newGameButton.addActionListener((ActionEvent e) -> {
