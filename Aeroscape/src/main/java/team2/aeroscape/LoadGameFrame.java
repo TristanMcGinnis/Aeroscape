@@ -4,8 +4,6 @@
  */
 package team2.aeroscape;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 /**
  *
  * @author nndcp
