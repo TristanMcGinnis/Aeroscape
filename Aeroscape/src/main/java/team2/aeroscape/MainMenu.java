@@ -44,15 +44,17 @@ public final class MainMenu extends JFrame {
         newGameButton.addActionListener((ActionEvent e) -> {
             // Add code to start the game here
             System.out.println("Creating new game...");
-            Aeroscape initialize = new Aeroscape(); 
-            initialize.init(); 
+            SwingUtilities.invokeLater(() -> {
+                Aeroscape initialize = new Aeroscape();
+                initialize.init();
+            });
+            dispose();
+            //setVisible(false);
         });
-        
-        newGameButton.addActionListener((ActionEvent e) -> {
-                // Add code to start the game here
-                System.out.println("Loading saved game...");
+        loadGameButton.addActionListener((ActionEvent e) -> {
+            // Add code to load the game here
+            System.out.println("Loading saved game...");
         });
-        
         optionsButton.addActionListener((ActionEvent e) -> {
             // Add code to display options here
             System.out.println("Displaying Aeroscape options...");
