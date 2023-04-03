@@ -2,6 +2,7 @@ package team2.aeroscape;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+
 /**
  * The `GridRenderer` class is a placeholder that extends `JPanel` and is responsible for rendering the game grid and circle. 
  * It has a static grid size and circle radius, as well as a `Camera` object that is used to apply a translation transform to the grid and circle based 
@@ -43,12 +44,12 @@ public class GridRenderer extends JPanel {
     
     
     public int getScreenWidth() {
-        return getWidth() * 2;
+        return getWidth();
     }
     
     
     public int getScreenHeight() {
-        return getHeight() * 2;
+        return getHeight();
     }
     
     
@@ -106,7 +107,7 @@ public class GridRenderer extends JPanel {
     
     public void handleKeyPress(KeyEvent e) {
         int key = e.getKeyCode();
-        int step = 5;
+        int step = (int) (5 + camera.getZoom());
 
         switch (key) {
             case KeyEvent.VK_W:

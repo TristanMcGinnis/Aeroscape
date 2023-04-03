@@ -10,10 +10,12 @@ import java.awt.Graphics2D;
 public class Camera {
     private int x;
     private int y;
-
-    public Camera(int x, int y) {
+    private double zoom;
+    
+    public Camera(int x, int y, double zoom) {
         this.x = x;
         this.y = y;
+        this.zoom = zoom;
     }
     
 /**
@@ -23,8 +25,8 @@ public class Camera {
  */
 
     public void follow(int targetX, int targetY, int w, int h) {
-        x = targetX - w/2 + 1000; // For some reason 1000 and 600 were the numbers needed to center the circle, probably a better way to do this.
-        y = targetY - h/2 + 600;
+        x = (int) ((targetX * zoom) - (w / 2));
+        y = (int) ((targetY * zoom) - (h / 2));
     }
 
     
@@ -34,6 +36,8 @@ public class Camera {
  */
     public void applyTransform(Graphics2D g2d) {
         g2d.translate(-x, -y);
+        g2d.scale(zoom, zoom);
+
     }
 
     
@@ -43,6 +47,7 @@ public class Camera {
  * affected by the camera transform.
  */    
     public void resetTransform(Graphics2D g2d) {
+        g2d.scale(1 / zoom, 1 / zoom);
         g2d.translate(x, y);
     }
     
@@ -53,5 +58,21 @@ public class Camera {
 
     public int getY() {
         return y;
+    }
+    
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+    
+    public double getZoom() {
+        return zoom;
+    }
+    
+    public void setZoom(double zoom) {
+        this.zoom = zoom;
     }
 }
