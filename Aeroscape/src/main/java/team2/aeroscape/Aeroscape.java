@@ -6,6 +6,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 /**
  * CS 321-01 TEAM 2
@@ -16,7 +18,7 @@ import javax.swing.JFrame;
 public class Aeroscape {
     
     // Initialize variables
-    public final Camera camera = new Camera(0, 0);
+    public final Camera camera = new Camera(0, 0, 1.0);
     public boolean running;
     public GridRenderer gridRenderer;
     
@@ -60,6 +62,20 @@ public class Aeroscape {
         public void componentResized(ComponentEvent e) {
             initializePositions(); // Call the initializePositions method to update the positions of the circle and camera based on the new window size
         }
+        });
+        
+        // Add MouseWheelListener for zooming
+        frame.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                double zoomFactor = 0.1;
+                if (e.getWheelRotation() < 0) {
+                    camera.setZoom(Math.min(camera.getZoom() + zoomFactor, 3.0)); // Limit the maximum zoom level
+                } else {
+                    camera.setZoom(Math.max(camera.getZoom() - zoomFactor, 0.2)); // Limit the minimum zoom level
+                }
+                gridRenderer.repaint();
+            }
         });
         
         
