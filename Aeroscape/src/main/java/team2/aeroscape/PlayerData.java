@@ -82,7 +82,8 @@ public class PlayerData {
                         return tempPlayer;
                     }catch(FileNotFoundException e)
                     {
-                        JOptionPane.showMessageDialog(null, "Existing log.JSON file not found");
+                        //JOptionPane.showMessageDialog(null, "Existing log.JSON file not found");
+                        System.out.println("Existing log.JSON file not found");
                         return null;
                     }catch(IOException e)
                     {
