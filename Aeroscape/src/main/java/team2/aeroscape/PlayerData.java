@@ -1,4 +1,4 @@
-package playerdata;
+package team2.aeroscape;
 
 import javax.swing.*;
 import java.awt.*;
@@ -107,7 +107,7 @@ public class PlayerData {
             JPanel panel = new JPanel();
             panel.setLayout(new FlowLayout());
 
-            // Create a JTextField for entering a number
+            // Create Text Field componenets for entering a number
             JTextField name = new JTextField(10);
             panel.add(name);
             JTextField level = new JTextField(5);
@@ -116,11 +116,6 @@ public class PlayerData {
             panel.add(money);
             JTextField resources = new JTextField(5);
             panel.add(resources);
-
-            //name.setText("Name");
-            //level.setText("Lvl");
-            //money.setText("Money");
-            //resources.setText("Resources");
             name.setToolTipText("Enter Player Name");
             level.setToolTipText("Enter Player Level");
             money.setToolTipText("Enter Money Balance");
@@ -140,8 +135,9 @@ public class PlayerData {
                     
                     PlayerData newPlayer = new PlayerData(inputName, inputLevel, inputMoney, inputResources);
                     logData(newPlayer);
-
-                    JOptionPane.showMessageDialog(null, "Data saved to log.JSON");
+                    
+                    String dataLogMsg = "Data saved to log for "+name.getText();
+                    JOptionPane.showMessageDialog(null, dataLogMsg);
 
                 }
             });
@@ -173,10 +169,10 @@ public class PlayerData {
             frame.add(panel);
 
             // Set the frame's properties
-            frame.setTitle("My Blank Window");
+            frame.setTitle("Player Data Entry");
             frame.setSize(300, 300);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setResizable(true);
+            frame.setResizable(false);
 
             // Show the frame
             frame.setVisible(true);

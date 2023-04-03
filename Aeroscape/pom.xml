@@ -12,4 +12,17 @@
         <exec.mainClass>team2.aeroscape.Aeroscape</exec.mainClass>
     </properties>
     <name>Aeroscape</name>
+  <dependencies>  
+    <dependency>
+        <groupId>com.googlecode.json-simple</groupId>
+        <artifactId>json-simple</artifactId>
+        <version>1.1.1</version>
+    </dependency>
+    <dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20220924</version>
+    </dependency>
+  </dependencies>  
+    
 </project>
