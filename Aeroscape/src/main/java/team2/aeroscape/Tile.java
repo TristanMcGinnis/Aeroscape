@@ -9,6 +9,8 @@ public class Tile {
     private boolean walkable;
     private Color color;
     private ArrayList<GameObject> gameObjects;
+    private int[] resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
+
 
     public Tile(int x, int y, boolean walkable, Color color) {
         this.x = x;
@@ -16,6 +18,7 @@ public class Tile {
         this.walkable = walkable;
         this.color = color;
         this.gameObjects = new ArrayList<>();
+        this.resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
     }
 
     public int getX() {
@@ -45,16 +48,34 @@ public class Tile {
     public void removeGameObject(GameObject gameObject) {
         gameObjects.remove(gameObject);
     }
+    
+    public void addResource(int resourceType, int resourceAmount) {
+        resources[resourceType] += resourceAmount;
+    }
+    
+    public int[] getResources() {
+        return resources;
+    }
 
+    
     public void draw(Graphics2D g2d, int tileSize) {
+        if (resources[0] > 0) {
+            // Show iron color
+            g2d.setColor(new Color (228,161,86));
+        } else if (resources[1] > 0) {
+            // Show copper color
+            g2d.setColor(new Color (255, 140, 0));
+        } else if (resources[2] > 0) {
+            // Show gold color
+            g2d.setColor(Color.yellow);
+        } else if (resources[3] > 0) {
+            // Show coal color
+            g2d.setColor(Color.black);
+        } else {
+            // Show default color
+            g2d.setColor(color);
+        }
 
-        
-        
-        g2d.setColor(color);
         g2d.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
-        
-        //for (GameObject gameObject : gameObjects) {
-            //gameObject.draw(g2d, x * tileSize, y * tileSize, tileSize);
-        //}
     }
 }

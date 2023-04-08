@@ -18,14 +18,18 @@ import java.awt.event.MouseWheelListener;
 public class Aeroscape {
     
     // Initialize variables
-    public final Player player;
-    public final Camera camera = new Camera(0, 0, 1.0);
-    public boolean running;
+    private Player player;
+    private Camera camera;
+    private GridRenderer gridRenderer;
+    private Inventory inventory;
+    private boolean running;
     private boolean isZooming;
-    public GridRenderer gridRenderer;
+
     
     public Aeroscape() {
         player = new Player(300, 300);
+        camera = new Camera(0, 0, 1.0);
+        inventory = new Inventory();
     }
     
     // Main method
