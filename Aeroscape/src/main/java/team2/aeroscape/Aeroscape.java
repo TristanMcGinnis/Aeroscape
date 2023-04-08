@@ -18,13 +18,19 @@ import java.awt.event.MouseWheelListener;
 public class Aeroscape {
     
     // Initialize variables
+    public final Player player;
     public final Camera camera = new Camera(0, 0, 1.0);
     public boolean running;
+    private boolean isZooming;
     public GridRenderer gridRenderer;
     
+    public Aeroscape() {
+        player = new Player(300, 300);
+    }
     
     // Main method
     public static void main(String[] args) {
+        Aeroscape aeroscape = new Aeroscape();
         MainMenu mainMenu = new MainMenu();
         System.out.println("Menu Initialized");
     }
@@ -34,7 +40,7 @@ public class Aeroscape {
     public void init() {
         // Initialize game entities and other settings here
         System.out.println("Init");
-        gridRenderer = new GridRenderer(camera);
+        gridRenderer = new GridRenderer(camera, player);
 
         
         // Create game window
@@ -51,7 +57,12 @@ public class Aeroscape {
         frame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                gridRenderer.handleKeyPress(e); // Call the handleKeyPress method in the GridRenderer class to handle user input
+                gridRenderer.handleKeyPress(e);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                gridRenderer.handleKeyPress(e);
             }
         });
         
@@ -64,7 +75,6 @@ public class Aeroscape {
         }
         });
         
-        // Add MouseWheelListener for zooming
         frame.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
@@ -74,9 +84,19 @@ public class Aeroscape {
                 } else {
                     camera.setZoom(Math.max(camera.getZoom() - zoomFactor, 0.2)); // Limit the minimum zoom level
                 }
+
+                int screenWidth = gridRenderer.getScreenWidth();
+                int screenHeight = gridRenderer.getScreenHeight();
+                double newX = player.getX() * camera.getZoom() - (screenWidth / 2);
+                double newY = player.getY() * camera.getZoom() - (screenHeight / 2);
+
+                camera.setX((int) newX);
+                camera.setY((int) newY);
+
                 gridRenderer.repaint();
             }
         });
+
         
         
         // Start game loop in seperate thread
@@ -103,7 +123,7 @@ public class Aeroscape {
             lastUpdateTime = now;
 
             while (delta >= 1) {
-                update(); // Update game entities
+                update(delta); // Update game entities
                 delta--;
             }
             render(); // Render the game entities
@@ -111,18 +131,34 @@ public class Aeroscape {
         }
     }
 
-    
-    public void update() {
+
+    public void update(double delta) {
         // Update game entities/camera here
         try {
             int screenWidth = gridRenderer.getScreenWidth();
             int screenHeight = gridRenderer.getScreenHeight();
-            camera.follow(GridRenderer.getCircleX(), GridRenderer.getCircleY(), screenWidth, screenHeight);
-        }
-        catch(Exception NullPointerException){
+
+            player.update();
+
+            double lerpFactor = 0.1; // Adjust this value for smoother or more responsive movement (0.0 to 1.0)
+            double newX, newY;
+            if (isZooming) {
+                newX = player.getX() * camera.getZoom() - (screenWidth / 2);
+                newY = player.getY() * camera.getZoom() - (screenHeight / 2);
+            } else {
+                newX = Camera.lerp(camera.getX(), player.getX() * camera.getZoom() - (screenWidth / 2), lerpFactor);
+                newY = Camera.lerp(camera.getY(), player.getY() * camera.getZoom() - (screenHeight / 2), lerpFactor);
+            }
+
+            camera.setX((int) newX);
+            camera.setY((int) newY);
+
+        } catch (Exception NullPointerException) {
             System.out.println("Null Pointer");
         }
     }
+
+
 
     
     // Render game entities method

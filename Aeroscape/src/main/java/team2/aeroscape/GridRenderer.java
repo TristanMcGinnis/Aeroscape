@@ -14,6 +14,7 @@ public class GridRenderer extends JPanel {
     // Initialize variables
     //private static final int GRID_SIZE = 50;
     private static final int CIRCLE_RADIUS = 20;
+    private Player player;
     public final Camera camera;
     public static int circleX = 300;
     public static int circleY = 300;
@@ -22,8 +23,9 @@ public class GridRenderer extends JPanel {
     private Grid grid;
     
     
-    public GridRenderer(Camera camera){
-       
+    public GridRenderer(Camera camera, Player player){
+        
+        this.player = player;
         this.camera = camera;
         setPreferredSize(new Dimension(1920, 1080));
         System.out.println("Grid Renderer initialized");
@@ -59,16 +61,17 @@ public class GridRenderer extends JPanel {
     
     @Override
     public void paintComponent(Graphics g) {
+        
         System.out.println("Painting");
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        
-        g2d.scale(camera.getZoom(), camera.getZoom());
-        g2d.translate(-camera.getX(), -camera.getY());
-        
+
+        camera.applyTransform(g2d); // Use the applyTransform method from the Camera class
+
         grid.drawGrid(g2d, getWidth(), getHeight());
-        
         drawCircle(g2d);
+
+        camera.resetTransform(g2d); // Use the resetTransform method from the Camera class
 
     }
 
@@ -80,7 +83,7 @@ public class GridRenderer extends JPanel {
 */
     private void drawCircle(Graphics2D g2d) {
         g2d.setColor(Color.RED);
-        g2d.fillOval(circleX - CIRCLE_RADIUS, circleY - CIRCLE_RADIUS, CIRCLE_RADIUS * 2, CIRCLE_RADIUS * 2);
+        g2d.fillOval(player.getX() - CIRCLE_RADIUS, player.getY() - CIRCLE_RADIUS, CIRCLE_RADIUS * 2, CIRCLE_RADIUS * 2);
     }
 
     
@@ -89,19 +92,32 @@ public class GridRenderer extends JPanel {
         int key = e.getKeyCode();
         int step = (int) (5 + camera.getZoom());
 
-        switch (key) {
-            case KeyEvent.VK_W:
-                circleY -= step;
-                break;
-            case KeyEvent.VK_A:
-                circleX -= step;
-                break;
-            case KeyEvent.VK_S:
-                circleY += step;
-                break;
-            case KeyEvent.VK_D:
-                circleX += step;
-                break;
+        if (e.getID() == KeyEvent.KEY_PRESSED) {
+            switch (key) {
+                case KeyEvent.VK_W:
+                    player.setVelY(-step);
+                    break;
+                case KeyEvent.VK_A:
+                    player.setVelX(-step);
+                    break;
+                case KeyEvent.VK_S:
+                    player.setVelY(step);
+                    break;
+                case KeyEvent.VK_D:
+                    player.setVelX(step);
+                    break;
+            }
+        } else if (e.getID() == KeyEvent.KEY_RELEASED) {
+            switch (key) {
+                case KeyEvent.VK_W:
+                case KeyEvent.VK_S:
+                    player.stopY();
+                    break;
+                case KeyEvent.VK_A:
+                case KeyEvent.VK_D:
+                    player.stopX();
+                    break;
+            }
         }
         repaint();
     }
