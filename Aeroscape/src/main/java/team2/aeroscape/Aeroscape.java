@@ -22,7 +22,7 @@ public class Aeroscape {
     private Camera camera;
     private GridRenderer gridRenderer;
     private Inventory inventory;
-    public boolean running;
+    private boolean running;
     private boolean isZooming;
 
     
