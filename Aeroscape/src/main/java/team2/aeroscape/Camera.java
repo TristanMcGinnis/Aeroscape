@@ -75,4 +75,8 @@ public class Camera {
     public void setZoom(double zoom) {
         this.zoom = zoom;
     }
+    
+    public static double lerp(double a, double b, double t) {
+        return a + (b - a) * t;
+    }
 }

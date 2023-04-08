@@ -8,17 +8,17 @@ package team2.aeroscape;
  *
  * @author nndcp
  */
-public class GSettings {
+public class GameSettings {
     private boolean soundEnabled;
     private int volumeVal;
     private int difficulty; //0-3 (Peaceful, Easy, Normal, Hard)
     
-    public GSettings() {
+    public GameSettings() {
         soundEnabled = true;
         volumeVal = 50;
         difficulty = 1;
     }
-    public GSettings(String fileName) {
+    public GameSettings(String fileName) {
         //Ideally this will interface with a JSON file
         //Ex. data = load(fileName); soundEnabled = data.soundEnabled;
     }
