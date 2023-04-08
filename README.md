@@ -1,6 +1,7 @@
-# Aeroscape
+#Aeroscape
+Aeroscape is a 2D grid-based game developed by Team 2 for our Object Oriented Java class (CS 321). The game is inspired by Factorio and features material collection, placeable structures, and enemy encounters.
 
-# Code Drop
-Tristan McGinnis-
-PlayerData.java can be run in netbeans to display an interface used to test input and output of data logging to json files linked via the playername.
+#Gameplay
+In Aeroscape, players explore a grid-based world and gather materials to build structures and weapons to defend against enemies. Each grid acts as a container to an object, making strategic placement of structures and defenses crucial for survival.
 
+The game is heavily inspired by Factorio, a popular factory building game, and includes similar mechanics such as automated machines for production.
