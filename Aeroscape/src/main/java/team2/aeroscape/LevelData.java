@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -22,6 +23,7 @@ public class LevelData {
     int difficulty = 0;
     int inventory[];
     int mapData[][];
+    private ArrayList<Miner> miners;
     
     /**
      * This constructor takes all relevant save information for logging/loading for persistence between sessions.
@@ -38,6 +40,16 @@ public class LevelData {
         this.difficulty = difficulty;
         this.inventory = inventory;
         this.mapData = mapData;
+        
+        this.mapData = new int[mapData.length][mapData[0].length];
+        this.miners = new ArrayList<Miner>();
+
+        
+        for (int i = 0; i < mapData.length; i++) {
+            for (int j = 0; j < mapData[0].length; j++) {
+                this.mapData[i][j] = mapData[i][j];
+            }
+        }
     }
     
     /**
@@ -48,6 +60,13 @@ public class LevelData {
         new File("saves").mkdirs();
     }
     
+    public void addMiner(Miner miner) {
+        miners.add(miner);
+    }
+
+    public ArrayList<Miner> getMiners() {
+        return miners;
+    }
     
     public static JSONArray ToJsonArr(int inArray[])
     {
@@ -94,7 +113,7 @@ public class LevelData {
     
     public static int[][] FromJson2DArr(JSONArray inArray)
     {
-        int outArray[][] = new int[inArray.size()][inArray.size()];
+        int outArray[][] = new int[inArray.size()][((JSONArray) inArray.get(0)).size()];
         //System.out.println("arraySize: "+inArray.size());
         for(int i = 0; i < inArray.size(); i++)
         {

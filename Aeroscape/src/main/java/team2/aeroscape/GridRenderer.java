@@ -2,6 +2,9 @@ package team2.aeroscape;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 /**
  * The `GridRenderer` class is a placeholder that extends `JPanel` and is responsible for rendering the game grid and circle. 
@@ -21,12 +24,15 @@ public class GridRenderer extends JPanel {
     public static int screenWidth;
     public static int screenHeight;
     private Grid grid;
+    private Miner miner;
+    private LevelData levelData;
     
     
-    public GridRenderer(Camera camera, Player player){
+    public GridRenderer(Camera camera, Player player, LevelData levelData){
         
         this.player = player;
         this.camera = camera;
+        this.levelData = levelData;
         setPreferredSize(new Dimension(1920, 1080));
         System.out.println("Grid Renderer initialized");
         screenWidth = getScreenWidth();
@@ -36,6 +42,14 @@ public class GridRenderer extends JPanel {
         int gridWidth = 100;  // Set desired grid width
         int gridHeight = 100; // Set desired grid height
         grid = new Grid(50, camera, gridWidth, gridHeight);
+        
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                handleMouseClick(e);
+            }
+        });
+        
     }
     
     
@@ -62,7 +76,7 @@ public class GridRenderer extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         
-        System.out.println("Painting");
+        //System.out.println("Painting");
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
@@ -72,8 +86,11 @@ public class GridRenderer extends JPanel {
         drawCircle(g2d);
 
         camera.resetTransform(g2d); // Use the resetTransform method from the Camera class
-
+     
+    for (Miner miner : levelData.getMiners()) {
+        miner.render(g2d, camera);
     }
+}
 
     
     
@@ -121,5 +138,33 @@ public class GridRenderer extends JPanel {
         }
         repaint();
     }
+    
+    public void handleMouseClick(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+
+        // Convert screen coordinates to world coordinates
+        int worldX = (int) ((x + camera.getX()) / camera.getZoom());
+        int worldY = (int) ((y + camera.getY()) / camera.getZoom());
+
+        // Snap to the grid
+        int gridSize = 50; // Assuming grid size is 50
+        int gridX = worldX / gridSize * gridSize;
+        int gridY = worldY / gridSize * gridSize;
+        
+        System.out.println("World X: " + worldX + ", World Y: " + worldY);
+        
+        Miner miner = new Miner(gridX, gridY);
+        miner.setX(gridX);
+        miner.setY(gridY);
+        levelData.addMiner(miner);
+
+
+        // Repaint the GridRenderer to display the miner
+        repaint();
+        
+        System.out.println("Mouse clicked");
+    }
+
 }
 

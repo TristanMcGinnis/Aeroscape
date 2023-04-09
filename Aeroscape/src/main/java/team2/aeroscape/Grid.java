@@ -1,41 +1,20 @@
-/**
-
-The Grid class represents a grid of tiles that make up a game world. It generates resources on the
-tiles using given probabilities and draws the tiles on the screen.
-*/
 package team2.aeroscape;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Random;
 
-/**
- *
- * @author Jacob
- */
+
 public class Grid {
-/**
- * The size of the grid.
- */
+
     private int gridSize;
 
-/**
- * The camera used to view the grid.
- */
+
     private Camera camera;
 
-/**
- * The array of tiles that make up the grid.
- */
+
     private Tile[][] tiles;
 
-/**
- * Constructs a Grid object with the given parameters.
- *
- * @param gridSize The size of the grid.
- * @param camera The camera used to view the grid.
- * @param gridWidth The width of the grid.
- * @param gridHeight The height of the grid.
- */
+
     public Grid(int gridSize, Camera camera, int gridWidth, int gridHeight) {
         this.gridSize = gridSize;
         this.camera = camera;
@@ -44,10 +23,6 @@ public class Grid {
         generateResources();
     }
 
-/**
- * Generates resources on each tile using given probabilities.
- * Each tile is assigned a random color.
- */
     private void generateResources() {
         Random rand = new Random();
 
@@ -80,13 +55,6 @@ public class Grid {
         }
     }
      
-/**
- * Draws the grid on the screen using the given Graphics2D object and screen dimensions.
- *
- * @param g2d The Graphics2D object used to draw the grid.
- * @param screenWidth The width of the screen.
- * @param screenHeight The height of the screen.
- */
     public void drawGrid(Graphics2D g2d, int screenWidth, int screenHeight) {
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {
