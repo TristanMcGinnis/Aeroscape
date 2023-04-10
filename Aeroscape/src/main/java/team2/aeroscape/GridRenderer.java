@@ -1,47 +1,44 @@
 package team2.aeroscape;
-import javax.swing.*;
-import java.awt.*;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import javax.swing.JPanel;
 
 /**
- * The `GridRenderer` class is a placeholder that extends `JPanel` and is responsible for rendering the game grid and circle. 
- * It has a static grid size and circle radius, as well as a `Camera` object that is used to apply a translation transform to the grid and circle based 
- * on the camera's position. The `circleX` and `circleY` static fields represent the position of the circle, and the `screenWidth` 
- * and `screenHeight` static fields represent the dimensions of the game screen.
-*/
+ * The `GridRenderer` class is responsible for rendering the game grid and the player's circle. It extends `JPanel` and uses a `Camera` object
+ * to apply a translation transform to the grid and circle based on the camera's position.
+ */
 public class GridRenderer extends JPanel {
     
-    // Initialize variables
-    //private static final int GRID_SIZE = 50;
+    // Initialize constants
     private static final int CIRCLE_RADIUS = 20;
-    private Player player;
-    public final Camera camera;
-    public static int circleX = 300;
-    public static int circleY = 300;
-    public static int screenWidth;
-    public static int screenHeight;
-    private Grid grid;
-    private Miner miner;
-    private LevelData levelData;
+    private static final int GRID_SIZE = 50;
     
+    // Declare instance variables
+    private final Camera camera;
+    private final Player player;
+    private final LevelData levelData;
+    private final Grid grid;
+    private int screenWidth;
+    private int screenHeight;
     
-    public GridRenderer(Camera camera, Player player, LevelData levelData){
-        
-        this.player = player;
+    /**
+     * Constructs a new `GridRenderer` object with the specified `Camera`, `Player`, and `LevelData`.
+     */
+    public GridRenderer(Camera camera, Player player, LevelData levelData) {
         this.camera = camera;
+        this.player = player;
         this.levelData = levelData;
-        setPreferredSize(new Dimension(1920, 1080));
-        System.out.println("Grid Renderer initialized");
-        screenWidth = getScreenWidth();
-        screenHeight = getScreenHeight();
-        circleX = screenWidth / 2;
-        circleY = screenHeight / 2;
-        int gridWidth = 100;  // Set desired grid width
-        int gridHeight = 100; // Set desired grid height
-        grid = new Grid(50, camera, gridWidth, gridHeight);
+        this.grid = new Grid(GRID_SIZE, camera, 100, 100);
+        this.screenWidth = 1920;
+        this.screenHeight = 1080;
+        
+        setPreferredSize(new Dimension(screenWidth, screenHeight));
         
         addMouseListener(new MouseAdapter() {
             @Override
@@ -49,67 +46,73 @@ public class GridRenderer extends JPanel {
                 handleMouseClick(e);
             }
         });
-        
     }
     
-    
-    public static int getCircleX() {
-        return circleX;
+    /**
+     * Returns the current X coordinate of the player's circle.
+     */
+    public int getCircleX() {
+        return player.getX();
     }
     
-    
-    public static int getCircleY() {
-    return circleY;
+    /**
+     * Returns the current Y coordinate of the player's circle.
+     */
+    public int getCircleY() {
+        return player.getY();
     }
     
-    
+    /**
+     * Returns the width of the game screen.
+     */
     public int getScreenWidth() {
-        return getWidth();
+        return screenWidth;
     }
     
-    
+    /**
+     * Returns the height of the game screen.
+     */
     public int getScreenHeight() {
-        return getHeight();
+        return screenHeight;
     }
     
-    
+    /**
+     * Paints the grid and the player's circle on the panel using the specified `Graphics` object.
+     */
     @Override
     public void paintComponent(Graphics g) {
-        
-        //System.out.println("Painting");
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
         camera.applyTransform(g2d); // Use the applyTransform method from the Camera class
 
-        grid.drawGrid(g2d, getWidth(), getHeight());
+        grid.drawGrid(g2d, screenWidth, screenHeight);
         drawCircle(g2d);
 
         camera.resetTransform(g2d); // Use the resetTransform method from the Camera class
      
-    for (Miner miner : levelData.getMiners()) {
-        miner.render(g2d, camera);
+        for (Miner miner : levelData.getMiners()) {
+            miner.render(g2d, camera);
+        }
     }
-}
-
     
-    
-/*
- * The `drawCircle()` method draws the circle at the current position using the `Graphics2D` object passed to it. This method is also
- * called by the `paintComponent()` method.
-*/
+    /**
+     * Draws the player's circle on the panel using the specified `Graphics2D` object.
+     */
     private void drawCircle(Graphics2D g2d) {
         g2d.setColor(Color.RED);
         g2d.fillOval(player.getX() - CIRCLE_RADIUS, player.getY() - CIRCLE_RADIUS, CIRCLE_RADIUS * 2, CIRCLE_RADIUS * 2);
     }
-
     
-    
+    /**
+     * Handles key presses by updating the player's velocity and repainting the panel.
+     */
     public void handleKeyPress(KeyEvent e) {
         int key = e.getKeyCode();
         int step = (int) (5 + camera.getZoom());
 
-        if (e.getID() == KeyEvent.KEY_PRESSED) {
+        if (e.getID() == KeyEvent.KEY_PRESSED)
+        {
             switch (key) {
                 case KeyEvent.VK_W:
                     player.setVelY(-step);
@@ -148,23 +151,15 @@ public class GridRenderer extends JPanel {
         int worldY = (int) ((y + camera.getY()) / camera.getZoom());
 
         // Snap to the grid
-        int gridSize = 50; // Assuming grid size is 50
-        int gridX = worldX / gridSize * gridSize;
-        int gridY = worldY / gridSize * gridSize;
-        
+        int gridX = (worldX / GRID_SIZE) * GRID_SIZE;
+        int gridY = (worldY / GRID_SIZE) * GRID_SIZE;
+
         System.out.println("World X: " + worldX + ", World Y: " + worldY);
-        
+
         Miner miner = new Miner(gridX, gridY);
-        miner.setX(gridX);
-        miner.setY(gridY);
         levelData.addMiner(miner);
 
-
-        // Repaint the GridRenderer to display the miner
         repaint();
-        
-        System.out.println("Mouse clicked");
     }
-
 }
 
