@@ -24,16 +24,18 @@ public class GridRenderer extends JPanel {
     private final Player player;
     private final LevelData levelData;
     private final Grid grid;
+    private final Inventory inventory;
     private int screenWidth;
     private int screenHeight;
     
     /**
      * Constructs a new `GridRenderer` object with the specified `Camera`, `Player`, and `LevelData`.
      */
-    public GridRenderer(Camera camera, Player player, LevelData levelData) {
+    public GridRenderer(Camera camera, Player player, LevelData levelData, Inventory inventory) {
         this.camera = camera;
         this.player = player;
         this.levelData = levelData;
+        this.inventory = inventory;
         this.grid = new Grid(GRID_SIZE, camera, 100, 100);
         this.screenWidth = 1920;
         this.screenHeight = 1080;
@@ -156,7 +158,7 @@ public class GridRenderer extends JPanel {
 
         System.out.println("World X: " + worldX + ", World Y: " + worldY);
 
-        Miner miner = new Miner(gridX, gridY);
+        Miner miner = new Miner(gridX, gridY, grid, inventory);
         levelData.addMiner(miner);
 
         repaint();
