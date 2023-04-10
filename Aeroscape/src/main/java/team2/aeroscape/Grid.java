@@ -63,4 +63,15 @@ public class Grid {
             }
         }
     }
+    
+    public Tile getTile(int x, int y) {
+        if (x < 0 || y < 0 || x >= tiles.length || y >= tiles[x].length) {
+            return null; // return null if the tile is out of bounds
+        }
+        return tiles[x][y];
+    }
+
+    public int getGridSize() {
+        return gridSize;
+    }
 }

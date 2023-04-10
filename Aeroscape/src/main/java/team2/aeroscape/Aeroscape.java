@@ -22,7 +22,6 @@ public class Aeroscape {
     private Camera camera;
     private GridRenderer gridRenderer;
     private Inventory inventory;
-    private Miner miner;
     private LevelData levelData;
     private boolean running;
     private boolean isZooming;
@@ -32,7 +31,6 @@ public class Aeroscape {
         player = new Player(300, 300);
         camera = new Camera(0, 0, 1.0);
         inventory = new Inventory();
-        miner = new Miner(0, 0); 
         levelData = new LevelData("defaultPlayer", 1, 0, new int[10], new int[100][100]);
     }
     
@@ -48,7 +46,7 @@ public class Aeroscape {
     public void init() {
         // Initialize game entities and other settings here
         System.out.println("Init");
-        gridRenderer = new GridRenderer(camera, player, levelData);
+        gridRenderer = new GridRenderer(camera, player, levelData, inventory);
 
         
         JFrame frame = createGameWindow();
@@ -172,6 +170,10 @@ public class Aeroscape {
 
         } catch (Exception NullPointerException) {
             System.out.println("Null Pointer");
+        }
+        
+        for (Miner miner : levelData.getMiners()) {
+            miner.update();
         }
     }
 
