@@ -15,8 +15,9 @@ public class Tile {
         
     }
     
-    
     //Initialize tile with no building
+    //Tracks whether or not an individual tile has any resources or not; checked in Grid.generateResources()
+    private boolean resourcesGenerated;
     public Tile(int x, int y, boolean walkable, Color color) {
         this.x = x;
         this.y = y;
@@ -24,6 +25,9 @@ public class Tile {
         this.color = color;
         this.gameObjects = new ArrayList<>();
         this.resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
+        
+        //Defaults hasResources to false on creation
+        this.resourcesGenerated = false;
     }
     
     //Copy Constructor
@@ -70,6 +74,14 @@ public class Tile {
     
     public int[] getResources() {
         return resources;
+    }
+    
+    public void setResourcesGenerated(boolean tf){
+        resourcesGenerated = tf;
+    }
+    
+    public boolean getResourcesGenerated(){
+        return resourcesGenerated;
     }
 
     

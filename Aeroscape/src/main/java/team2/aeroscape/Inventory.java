@@ -6,13 +6,55 @@ public class Inventory {
     private int gold;
     private int coal;
     
+    private int iron_ingot;
+    private int copper_ingot;
+    private int gold_ingot;
+    
     public Inventory() {
         iron = 0;
         copper = 0;
         gold = 0;
         coal = 0;
+        
+        iron_ingot = 0;
+        copper_ingot = 0;
+        gold_ingot = 0;
     }
 
+    public int getIronIngot()
+    {
+        return iron_ingot;
+    }
+    
+    public void addIronIngot(int amount)
+    {
+        System.out.println("Iron_Ingot Added");
+        iron_ingot += amount;
+    }
+    
+    public int getCopperIngot()
+    {
+        return copper_ingot;
+    }
+    
+    public void addCopperIngot(int amount)
+    {
+        System.out.println("Copper_Ingot Added");
+        copper_ingot += amount;
+    }
+    
+    public int getGoldIngot()
+    {
+        return gold_ingot;
+    }
+    
+    public void addGoldIngot(int amount)
+    {
+        System.out.println("Gold_Ingot Added");
+        gold_ingot += amount;
+    }
+    
+    
     public int getIron() {
         return iron;
     }
