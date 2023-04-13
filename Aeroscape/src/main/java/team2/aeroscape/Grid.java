@@ -38,9 +38,13 @@ public class Grid {
 
                 // randomly generate resources
                 for (int resourceType = 0; resourceType < probabilities.length; resourceType++) {
-                    if (rand.nextDouble() < probabilities[resourceType]) { // use probabilities
+                    
+                    //Currently checks using a bool to see if the Tile already has a resource on it. This will have an impact on the odds of each resource appearing, giving preference to resources earlier in the probabilities array
+                    if (rand.nextDouble() < probabilities[resourceType] && !tiles[i][j].getResourcesGenerated()) { // use probabilities //and check if the Tile already has a resource generated onto it
                         int resourceAmount = rand.nextInt(5) + 1; // generate 1-5 units of resources
-
+                        
+                        tiles[i][j].setResourcesGenerated(true);
+                        
                         // check neighboring tiles for same resource
                         if (i > 0 && tiles[i - 1][j].getResources()[resourceType] > 0) {
                             tiles[i][j].addResource(resourceType, resourceAmount);
