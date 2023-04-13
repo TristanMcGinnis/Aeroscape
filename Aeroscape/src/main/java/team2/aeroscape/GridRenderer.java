@@ -157,8 +157,10 @@ public class GridRenderer extends JPanel {
         int gridY = (worldY / GRID_SIZE) * GRID_SIZE;
 
         System.out.println("World X: " + worldX + ", World Y: " + worldY);
-
-        Miner miner = new Miner(gridX, gridY, grid, inventory);
+        
+        //Construct miner and then replace tile with miner
+        Miner miner = new Miner(grid, inventory, grid.getTile(gridX,gridY));
+        grid.setTile(gridX, gridY, miner);
         levelData.addMiner(miner);
 
         repaint();

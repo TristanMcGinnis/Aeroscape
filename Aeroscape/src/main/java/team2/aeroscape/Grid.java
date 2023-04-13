@@ -13,13 +13,14 @@ public class Grid {
 
 
     private Tile[][] tiles;
+    
 
 
     public Grid(int gridSize, Camera camera, int gridWidth, int gridHeight) {
         this.gridSize = gridSize;
         this.camera = camera;
         this.tiles = new Tile[gridWidth][gridHeight];
-
+        
         generateResources();
     }
 
@@ -69,6 +70,14 @@ public class Grid {
             return null; // return null if the tile is out of bounds
         }
         return tiles[x][y];
+    }
+    
+    public void setTile(int x, int y, Tile tile) {
+        if (x < 0 || y < 0 || x >= tiles.length || y >= tiles[x].length) {
+            return;
+        }
+        
+        tiles[x][y] = tile;
     }
 
     public int getGridSize() {

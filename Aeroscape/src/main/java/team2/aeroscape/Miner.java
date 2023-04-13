@@ -4,17 +4,19 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 public class Miner extends Building {
-    
-    private int x;
-    private int y;
     private int miningSpeed = 1;
     private Grid grid;
     private Inventory inventory;
     
-    public Miner(int x, int y, Grid grid, Inventory inventory) {
-        super(x, y, 50, 50); // Set the width and height of the Miner building
-        this.x= x;
-        this.y = y;
+    public Miner(Grid grid, Inventory inventory) {
+        super(50, 50); // Set the width and height of the Miner building
+        this.grid = grid;
+        this.inventory = inventory;
+    }
+    
+        public Miner(Grid grid, Inventory inventory, Tile tile) {
+        super(50, 50, tile); // Set the width and height of the Miner building
+        color = new Color(0,0,255);
         this.grid = grid;
         this.inventory = inventory;
     }
@@ -34,12 +36,12 @@ public class Miner extends Building {
                 // Remove some amount of the resource from the tile and add it to the inventory
                 int amount = Math.min(resources[i], miningSpeed);
                 tile.addResource(i, -amount);
-                if (i == 0) {
-                    inventory.addIron(amount);
-                } else if (i == 1) {
-                    inventory.addCopper(amount);
-                } else if (i == 2) {
-                    inventory.addGold(amount);
+                switch (i) {
+                    case 0 -> inventory.addIron(amount);
+                    case 1 -> inventory.addCopper(amount);
+                    case 2 -> inventory.addGold(amount);
+                    default -> {
+                    }
                 }
                 mined = true;
                 break;
@@ -56,6 +58,6 @@ public class Miner extends Building {
     public void render(Graphics2D g2d, Camera camera) {
         g2d.setColor(Color.BLUE);
         int minerSize = 50; // Set the size of the miner
-        g2d.fillRect((int) ((x - camera.getX()) / camera.getZoom()), (int) ((y - camera.getY()) / camera.getZoom()), minerSize, minerSize);
+        g2d.fillRect((int) ((camera.getX() - x) / camera.getZoom()), (int) ((y - camera.getY()) / camera.getZoom()), minerSize, minerSize);
     }
 }

@@ -28,6 +28,7 @@ public class Camera {
     public void follow(int targetX, int targetY, int screenWidth, int screenHeight) {
         x = (int) ((targetX * zoom) - (screenWidth / 2));
         y = (int) ((targetY * zoom) - (screenHeight / 2));
+        
     }
     
     /**
