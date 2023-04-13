@@ -4,16 +4,20 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Tile {
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
     private boolean walkable;
-    private Color color;
+    protected Color color;
     private ArrayList<GameObject> gameObjects;
     private int[] resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
 
+    public Tile() {
+        
+    }
+    
+    //Initialize tile with no building
     //Tracks whether or not an individual tile has any resources or not; checked in Grid.generateResources()
     private boolean resourcesGenerated;
-
     public Tile(int x, int y, boolean walkable, Color color) {
         this.x = x;
         this.y = y;
@@ -24,6 +28,16 @@ public class Tile {
         
         //Defaults hasResources to false on creation
         this.resourcesGenerated = false;
+    }
+    
+    //Copy Constructor
+    public Tile(Tile tile) {
+        x = tile.x;
+        y = tile.y;
+        walkable = tile.walkable;
+        color = tile.color;
+        gameObjects = tile.gameObjects;
+        resources = tile.resources;
     }
 
     public int getX() {
