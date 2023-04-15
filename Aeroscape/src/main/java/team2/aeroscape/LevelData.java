@@ -24,6 +24,7 @@ public class LevelData {
     int inventory[];
     int mapData[][];
     private ArrayList<Miner> miners;
+    FireControl FC;
     
     /**
      * This constructor takes all relevant save information for logging/loading for persistence between sessions.
@@ -43,6 +44,7 @@ public class LevelData {
         
         this.mapData = new int[mapData.length][mapData[0].length];
         this.miners = new ArrayList<Miner>();
+        this.FC = new FireControl();
 
         
         for (int i = 0; i < mapData.length; i++) {
