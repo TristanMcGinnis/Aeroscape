@@ -41,7 +41,8 @@ public class FireControl {
         Iterator<SAM> iter = sams.iterator();
         while(iter.hasNext()) {
             SAM sam = iter.next();
-            if(sam.update()) iter.remove();
+            if(sam.update()) iter.remove(); //Sam deleted once no longer active
+            //See SAM.update() for more info
         }
     }
 }

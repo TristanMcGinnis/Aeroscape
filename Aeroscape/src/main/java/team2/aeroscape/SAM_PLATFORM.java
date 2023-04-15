@@ -27,7 +27,7 @@ public class SAM_PLATFORM extends Building {
             return false;
         
         samCount--;
-        SAM sam = new SAM(x,y, targetX, targetY);
+        SAM sam = new SAM(this, targetX, targetY);
         FC.addSam(sam);
         return true;
     }

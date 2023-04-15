@@ -132,6 +132,8 @@ public class Aeroscape {
         final double updateTime = 1_000_000_000.0 / 60.0; // 60 updates per second
         double lastUpdateTime = System.nanoTime(); 
         double delta = 0;
+       
+        
         while (running) {
             double now = System.nanoTime();
             delta += (now - lastUpdateTime) / updateTime;
@@ -143,6 +145,7 @@ public class Aeroscape {
             }
             render(); // Render the game entities
             //sync(); // Synchronize the game loop if needed
+            
         }
     }
 
@@ -172,9 +175,11 @@ public class Aeroscape {
             System.out.println("Null Pointer");
         }
         
+        //In theory shouldn't need this. gridRenderer should update all tiles or more effeciently only building types
         for (Miner miner : levelData.getMiners()) {
             miner.update();
         }
+        
     }
 
 
