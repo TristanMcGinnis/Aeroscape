@@ -93,9 +93,9 @@ public class GridRenderer extends JPanel {
 
         camera.resetTransform(g2d); // Use the resetTransform method from the Camera class
      
-        for (Miner miner : levelData.getMiners()) {
-            miner.render(g2d, camera);
-        }
+        renderMiners(g2d);
+        
+        g2d.dispose();
     }
     
     /**
@@ -157,13 +157,25 @@ public class GridRenderer extends JPanel {
         int gridY = (worldY / GRID_SIZE) * GRID_SIZE;
 
         System.out.println("World X: " + worldX + ", World Y: " + worldY);
-        
-        //Construct miner and then replace tile with miner
-        Miner miner = new Miner(grid, inventory, grid.getTile(gridX,gridY));
-        grid.setTile(gridX, gridY, miner);
-        levelData.addMiner(miner);
 
-        repaint();
+        Tile tile = grid.getTile(gridX / GRID_SIZE, gridY / GRID_SIZE);
+
+        // Place a miner on the tile, if there's no miner yet
+        if (tile != null && tile.getMiner() == null) {
+            Miner miner = new Miner(grid, inventory, tile);
+            tile.setMiner(miner);
+            levelData.addMiner(miner);
+
+            repaint();
+        } else {
+            System.out.println("Tile not found at (" + gridX + ", " + gridY + ")");
+        }
+    }
+
+    public void renderMiners(Graphics2D g2d) {
+        for (Miner miner : levelData.getMiners()) {
+            miner.render(g2d, camera);
+        }
     }
 }
 
