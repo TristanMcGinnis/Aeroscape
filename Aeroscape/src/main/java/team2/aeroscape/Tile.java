@@ -2,15 +2,22 @@ package team2.aeroscape;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.io.File;
 
 public class Tile {
     protected int x;
     protected int y;
     private boolean walkable;
     protected Color color;
+    protected BufferedImage texture;
     private ArrayList<GameObject> gameObjects;
     private int[] resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
     private Miner miner;
+    
+    
     public Tile() {
         
     }
@@ -18,17 +25,47 @@ public class Tile {
     //Initialize tile with no building
     //Tracks whether or not an individual tile has any resources or not; checked in Grid.generateResources()
     private boolean resourcesGenerated;
-    public Tile(int x, int y, boolean walkable, Color color) {
+    
+    
+    BufferedImage ironTexture;
+    BufferedImage copperTexture;
+    BufferedImage goldTexture;
+    BufferedImage coalTexture;
+    BufferedImage grassTexture;
+    
+    public Tile(int x, int y, boolean walkable) {
         this.x = x;
         this.y = y;
         this.walkable = walkable;
-        this.color = color;
+
+        File file = new File("/team2/aeroscape/textures/iron.png");
+
+        if (file.exists()) {
+            System.out.println("File found at: " + file.getAbsolutePath());
+        } else {
+            System.out.println("File not found!");
+        }
+        
+        
+        try {
+            ironTexture = ImageIO.read(getClass().getResource("/team2/aeroscape/textures/iron.png"));
+            copperTexture = ImageIO.read(getClass().getResource("/team2/aeroscape/textures/copper.png"));
+            goldTexture = ImageIO.read(getClass().getResource("/team2/aeroscape/textures/gold.png"));
+            coalTexture = ImageIO.read(getClass().getResource("/team2/aeroscape/textures/coal.png"));
+            grassTexture = ImageIO.read(getClass().getResource("/team2/aeroscape/textures/grass.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        
         this.gameObjects = new ArrayList<>();
         this.resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
         this.miner = miner;
-        //Defaults hasResources to false on creation
+        // Defaults hasResources to false on creation
         this.resourcesGenerated = false;
+        this.texture = grassTexture;
     }
+
     
     //Copy Constructor
     public Tile(Tile tile) {
@@ -86,28 +123,30 @@ public class Tile {
 
     
     public void draw(Graphics2D g2d, int tileSize) {
+        BufferedImage currentTexture = texture;
+
         if (miner != null) {
-            g2d.setColor (Color.blue);
-        }
-        else if (resources[0] > 0) {
-            // Show iron color
-            g2d.setColor(new Color (228,161,86));
+            currentTexture = miner.getTexture();
+        } else if (resources[0] > 0) {
+            // Set iron texture
+            currentTexture = ironTexture;
         } else if (resources[1] > 0) {
-            // Show copper color
-            g2d.setColor(new Color (255, 140, 0));
+            // Set copper texture
+            currentTexture = copperTexture;
         } else if (resources[2] > 0) {
-            // Show gold color
-            g2d.setColor(Color.yellow);
+            // Set gold texture
+            currentTexture = goldTexture;
         } else if (resources[3] > 0) {
-            // Show coal color
-            g2d.setColor(Color.black);
-        } else {
-            // Show default color
-            g2d.setColor(color);
+            // Set coal texture
+            currentTexture = coalTexture;
+        }
+        else {
+            currentTexture = grassTexture;
         }
 
-        g2d.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+        g2d.drawImage(currentTexture, x * tileSize, y * tileSize, tileSize, tileSize, null);
     }
+
     
     public Miner getMiner() {
         return miner;

@@ -2,22 +2,31 @@ package team2.aeroscape;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
 
 public class Miner extends Building {
     private int miningSpeed = 1;
     private long lastMiningTime = 0; // Store the time of the last mining action
     private long miningInterval = 5000; // Set the idle time between mining actions in milliseconds
-    private Grid grid;
     private Inventory inventory;
     private Tile tile;
-    
+    private BufferedImage texture;
     
     public Miner(Grid grid, Inventory inventory, Tile tile) {
         super(50, 50, tile); // Set the width and height of the Miner building
         color = new Color(0,0,255);
-        this.grid = grid;
         this.inventory = inventory;
         this.tile = tile;
+        /*
+        try {
+            this.texture = ImageIO.read(getClass().getResource("/textures/miner.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        */
     }
 
     @Override
@@ -84,4 +93,7 @@ public class Miner extends Building {
         g2d.fillRect(screenX, screenY, (int) (minerSize * camera.getZoom()), (int) (minerSize * camera.getZoom()));
         
     }
+        public BufferedImage getTexture() {
+        return texture;
+    }   
 }
