@@ -87,13 +87,14 @@ public class Aeroscape {
                 initializePositions();
             }
         });
-        
+        /*
         frame.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
                 handleMouseWheel(e);
             }
         });
+        */
     }
 
     private void handleMouseWheel(MouseWheelEvent e) {
@@ -176,10 +177,10 @@ public class Aeroscape {
         }
         
         //In theory shouldn't need this. gridRenderer should update all tiles or more effeciently only building types
+
         for (Miner miner : levelData.getMiners()) {
             miner.update();
-        }
-        
+        }      
     }
 
 

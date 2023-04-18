@@ -10,7 +10,7 @@ public class Tile {
     protected Color color;
     private ArrayList<GameObject> gameObjects;
     private int[] resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
-
+    private Miner miner;
     public Tile() {
         
     }
@@ -25,7 +25,7 @@ public class Tile {
         this.color = color;
         this.gameObjects = new ArrayList<>();
         this.resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
-        
+        this.miner = miner;
         //Defaults hasResources to false on creation
         this.resourcesGenerated = false;
     }
@@ -86,7 +86,10 @@ public class Tile {
 
     
     public void draw(Graphics2D g2d, int tileSize) {
-        if (resources[0] > 0) {
+        if (miner != null) {
+            g2d.setColor (Color.blue);
+        }
+        else if (resources[0] > 0) {
             // Show iron color
             g2d.setColor(new Color (228,161,86));
         } else if (resources[1] > 0) {
@@ -104,5 +107,13 @@ public class Tile {
         }
 
         g2d.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+    }
+    
+    public Miner getMiner() {
+        return miner;
+    }
+
+    public void setMiner(Miner miner) {
+        this.miner = miner;
     }
 }

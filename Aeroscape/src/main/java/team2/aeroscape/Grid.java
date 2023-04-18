@@ -64,7 +64,6 @@ public class Grid {
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {
                 tiles[i][j].draw(g2d, gridSize);
-
             }
         }
     }
