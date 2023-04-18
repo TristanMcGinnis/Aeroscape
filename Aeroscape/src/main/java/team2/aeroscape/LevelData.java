@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-//import java.util.ArrayList;
+import java.util.ArrayList;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -28,8 +28,8 @@ public class LevelData {
     int difficulty = 0;
     int inventory[];
     int mapData[][];
-    //private ArrayList<Miner> miners;
-    //FireControl FC;
+    ArrayList<Miner> miners;    //Not Persistent
+    FireControl FC;     //Not Persistent
     
     /**
      * This constructor takes all relevant save information for logging/loading for persistence between sessions.
@@ -48,8 +48,8 @@ public class LevelData {
         this.mapData = mapData;
         
         this.mapData = new int[mapData.length][mapData[0].length];
-        //this.miners = new ArrayList<Miner>();
-        //this.FC = new FireControl();
+        this.miners = new ArrayList<Miner>();   //Not Persistent
+        this.FC = new FireControl();    //Not Persistent
 
         
         for (int i = 0; i < mapData.length; i++) {
@@ -60,6 +60,33 @@ public class LevelData {
     }
     
     /**
+     * This constructor takes all relevant save information for logging/loading for persistence between sessions.
+     * @param name The name of the save
+     * @param inventory Array of inventory values. Each index represents a set type of "resource"
+     * @param mapData 2D Array storing the state of each grid of the save state. Values represent grid-state (ex: 0 is empty, 1 is MachineX, 2 is MachineY).
+     */ 
+    public LevelData(String name, int inventory[], int mapData[][])
+    {
+        this.name = name;
+        this.lvl = 0;
+        this.difficulty = 0;
+        this.inventory = inventory;
+        this.mapData = mapData;
+        
+        this.mapData = new int[mapData.length][mapData[0].length];
+        this.miners = new ArrayList<Miner>();   //Not Persistent
+        this.FC = new FireControl();    //Not Persistent
+
+        
+        for (int i = 0; i < mapData.length; i++) {
+            for (int j = 0; j < mapData[0].length; j++) {
+                this.mapData[i][j] = mapData[i][j];
+            }
+        }
+    }
+    
+    
+    /**
      * Creates save directory if it doesn't already exist.
      */
     public static void checkSaveDirectory()
@@ -67,13 +94,24 @@ public class LevelData {
         new File("saves").mkdirs();
     }
     
-    //public void addMiner(Miner miner) {
-    //    miners.add(miner);
-    //}
+    /**
+     * Adds new miners to the player's LevelData
+     * 
+     * @param miner New miner to be stored with LevelData 
+     */
+    public void addMiner(Miner miner) {
+        miners.add(miner);
+    }
 
-    //public ArrayList<Miner> getMiners() {
-    //    return miners;
-    //}
+    
+    /**
+     * Gets list of miners stored in the player's LevelData
+     * 
+     * @return Array list of current miners contained by <code>LevelData</code>
+    */
+    public ArrayList<Miner> getMiners() {
+        return miners;
+    }
     
     /**
      * Converts a standard Java Array to a JSON array usable by SimpleJSON library
