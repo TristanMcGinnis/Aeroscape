@@ -7,15 +7,20 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 /**
- *
+ * LevelData object used for persistence between sessions
+ * 
+ * A <code>LevelData</code> object contains a variety of information necessary to continue
+ * play upon relaunching the game such as player inventory and map data.
+ * 
  * @author Tristan McGinnis
+ * @version 1.0 April 18, 2023
  */
 public class LevelData {
     String name = "defaultPlayer";
@@ -23,17 +28,17 @@ public class LevelData {
     int difficulty = 0;
     int inventory[];
     int mapData[][];
-    private ArrayList<Miner> miners;
-    FireControl FC;
+    //private ArrayList<Miner> miners;
+    //FireControl FC;
     
     /**
      * This constructor takes all relevant save information for logging/loading for persistence between sessions.
      * @param name The name of the save
-     * @param lvl The current level of the player
-     * @param difficulty The difficulty level of the save
+     * @param lvl The current level of the player (unused)
+     * @param difficulty The difficulty level of the save (unused)
      * @param inventory Array of inventory values. Each index represents a set type of "resource"
      * @param mapData 2D Array storing the state of each grid of the save state. Values represent grid-state (ex: 0 is empty, 1 is MachineX, 2 is MachineY).
-     */
+     */ 
     public LevelData(String name, int lvl, int difficulty, int inventory[], int mapData[][])
     {
         this.name = name;
@@ -43,8 +48,8 @@ public class LevelData {
         this.mapData = mapData;
         
         this.mapData = new int[mapData.length][mapData[0].length];
-        this.miners = new ArrayList<Miner>();
-        this.FC = new FireControl();
+        //this.miners = new ArrayList<Miner>();
+        //this.FC = new FireControl();
 
         
         for (int i = 0; i < mapData.length; i++) {
@@ -62,14 +67,21 @@ public class LevelData {
         new File("saves").mkdirs();
     }
     
-    public void addMiner(Miner miner) {
-        miners.add(miner);
-    }
+    //public void addMiner(Miner miner) {
+    //    miners.add(miner);
+    //}
 
-    public ArrayList<Miner> getMiners() {
-        return miners;
-    }
+    //public ArrayList<Miner> getMiners() {
+    //    return miners;
+    //}
     
+    /**
+     * Converts a standard Java Array to a JSON array usable by SimpleJSON library
+     * 
+     * 
+     * @param inArray The input Java Array to be converted to a JSON Array
+     * @return An equivalent JSON Array 
+     */
     public static JSONArray ToJsonArr(int inArray[])
     {
         JSONArray outArray = new JSONArray();
@@ -82,9 +94,10 @@ public class LevelData {
     }
 
     /**
-     *
-     * @param inArray
-     * @return
+     * Converts a 2D Java Array to a 2D JSON Array by creating 2 1D JSON Arrays and placing them in a final output array
+     * 
+     * @param inArray The input 2D array to be converted to a 2D JSON Array
+     * @return An equivalent JSON Array composed of 2 other JSON Arrays
      */
     public static JSONArray ToJson2DArr(int inArray[][])
     {
@@ -102,6 +115,12 @@ public class LevelData {
         return outArray;
     }
     
+    /**
+     * Converts a JSON Array to a standard Java Array
+     * 
+     * @param inArray The input JSON Array to be converted to a Java Array
+     * @return An equivalent Java Array
+     */
     public static int[] FromJsonArr(JSONArray inArray)
     {
         
@@ -113,6 +132,12 @@ public class LevelData {
         return outArray;
     }
     
+    /**
+     * Converts a JSON Array (of 2 Arrays) to a 2D Java Array
+     * 
+     * @param inArray The input JSON Array to be converted to a 2D Java Array
+     * @return An equivalent 2D Java Array
+     */
     public static int[][] FromJson2DArr(JSONArray inArray)
     {
         int outArray[][] = new int[inArray.size()][((JSONArray) inArray.get(0)).size()];
@@ -130,6 +155,12 @@ public class LevelData {
         return outArray;
     }
     
+    /**
+     * Takes data from LevelData object and prints to a JSON file after making proper conversions
+     * The file for the save is titled with the <code>name</code> of the LevelData object
+     * 
+     * @param player The input Player object containing all the LevelData data needing to be saved
+     */
     public static void logData(LevelData player)
     {
         //debug
@@ -169,6 +200,13 @@ public class LevelData {
                     }
     }
     
+    /**
+     * Takes data from LevelData object and prints to a JSON file after making proper conversions
+     * The file for the save is titled with the <code>name</code> of the LevelData object
+     * 
+     * @param name The input name used to locate the file for the corresponding LevelData
+     * @return Data as a LevelData object just as it was originally entered with <code>logData</code>
+     */
     public static LevelData loadData(String name)
     {
         String logFilePath = "saves/"+name+"Log.json";
@@ -232,7 +270,8 @@ public class LevelData {
     }
     
     /*
-    //Example Main function with implementation test data
+    //Example Main function which can be used to save and load data to test the class
+    //Last Tested 4/2/23
     public static void main(String[] args)
     {
         System.out.println("LevelData log Test Start");
