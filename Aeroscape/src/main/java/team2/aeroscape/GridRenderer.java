@@ -8,6 +8,12 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 /**
@@ -17,9 +23,9 @@ import javax.swing.JPanel;
 public class GridRenderer extends JPanel {
     
     // Initialize constants
-    private static final int CIRCLE_RADIUS = 20;
+    private static final int CIRCLE_RADIUS = 40;
     private static final int GRID_SIZE = 50;
-    
+    private static BufferedImage playerTexture;
     // Declare instance variables
     private final Camera camera;
     private final Player player;
@@ -28,6 +34,17 @@ public class GridRenderer extends JPanel {
     private final Inventory inventory;
     private int screenWidth;
     private int screenHeight;
+    
+    static {
+        try {
+            Path playerPath = Paths.get("src/main/resources/textures/player.png");
+            playerTexture = ImageIO.read(Files.newInputStream(playerPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
     
     /**
      * Constructs a new `GridRenderer` object with the specified `Camera`, `Player`, and `LevelData`.
@@ -90,7 +107,7 @@ public class GridRenderer extends JPanel {
         camera.applyTransform(g2d); // Use the applyTransform method from the Camera class
 
         grid.drawGrid(g2d, screenWidth, screenHeight);
-        drawCircle(g2d);
+        drawPlayer(g2d);
 
         camera.resetTransform(g2d); // Use the resetTransform method from the Camera class
      
@@ -102,9 +119,10 @@ public class GridRenderer extends JPanel {
     /**
      * Draws the player's circle on the panel using the specified `Graphics2D` object.
      */
-    private void drawCircle(Graphics2D g2d) {
-        g2d.setColor(Color.RED);
-        g2d.fillOval(player.getX() - CIRCLE_RADIUS, player.getY() - CIRCLE_RADIUS, CIRCLE_RADIUS * 2, CIRCLE_RADIUS * 2);
+    private void drawPlayer(Graphics2D g2d) {
+        int x = player.getX() - CIRCLE_RADIUS;
+        int y = player.getY() - CIRCLE_RADIUS;
+        g2d.drawImage(playerTexture, x, y, 2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS, null);
     }
     
     private void drawResources(Graphics2D g2d) {

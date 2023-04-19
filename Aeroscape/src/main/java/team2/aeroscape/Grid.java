@@ -1,5 +1,4 @@
 package team2.aeroscape;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Random;
 
@@ -32,8 +31,6 @@ public class Grid {
 
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {
-                float brightness = rand.nextFloat() * 0.5f + 0.25f;  // Range: 0.25 to 0.75
-                int grayValue = (int) (brightness * 255);
                 tiles[i][j] = new Tile(i, j, true);
 
                 // randomly generate resources
@@ -41,7 +38,7 @@ public class Grid {
                     
                     //Currently checks using a bool to see if the Tile already has a resource on it. This will have an impact on the odds of each resource appearing, giving preference to resources earlier in the probabilities array
                     if (rand.nextDouble() < probabilities[resourceType] && !tiles[i][j].getResourcesGenerated()) { // use probabilities //and check if the Tile already has a resource generated onto it
-                        int resourceAmount = rand.nextInt(5) + 1; // generate 1-5 units of resources
+                        int resourceAmount = rand.nextInt(451) + 50; // generate 50-500 units of resources
                         
                         tiles[i][j].setResourcesGenerated(true);
                         
