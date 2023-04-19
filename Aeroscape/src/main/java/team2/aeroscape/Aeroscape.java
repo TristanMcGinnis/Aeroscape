@@ -130,10 +130,13 @@ public class Aeroscape {
     */
     public void gameLoop() {
         System.out.println("Game Loop Initialized");
+        final double updateTime = 1_000_000_000.0 / 60.0; // 60 updates per second
+        double lastUpdateTime = System.nanoTime(); 
         double delta = 0;
         
         
         while (running) {
+            double now = System.nanoTime();
             delta = (now - lastUpdateTime) / updateTime;
             lastUpdateTime = now;
             
@@ -146,6 +149,7 @@ public class Aeroscape {
             //method with a fixed delta and only once per update
             update(updateTime);
             while(delta < updateTime) {
+                delta = System.nanoTime() - lastUpdateTime;
             }
            
             render(); // Render the game entities
