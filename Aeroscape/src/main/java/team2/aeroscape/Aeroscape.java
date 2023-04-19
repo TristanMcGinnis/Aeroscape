@@ -34,6 +34,14 @@ public class Aeroscape {
         levelData = new LevelData("defaultPlayer", 1, 0, new int[10], new int[100][100]);
     }
     
+    public Aeroscape(String playerName) {
+        player = new Player(300, 300);
+        camera = new Camera(0, 0, 1.0);
+        inventory = new Inventory();
+        levelData = new LevelData(playerName, 1, 0, new int[10], new int[100][100]);
+        
+        System.out.println("Player name = " + playerName);
+    }
     
     public static void main(String[] args) {
         Aeroscape aeroscape = new Aeroscape();
