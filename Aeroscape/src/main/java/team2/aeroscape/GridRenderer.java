@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.TexturePaint;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -14,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 /**
@@ -26,6 +30,7 @@ public class GridRenderer extends JPanel {
     private static final int CIRCLE_RADIUS = 40;
     private static final int GRID_SIZE = 50;
     private static BufferedImage playerTexture;
+    private static ImageIcon waterTexture;
     // Declare instance variables
     private final Camera camera;
     private final Player player;
@@ -39,6 +44,9 @@ public class GridRenderer extends JPanel {
         try {
             Path playerPath = Paths.get("src/main/resources/textures/player.png");
             playerTexture = ImageIO.read(Files.newInputStream(playerPath));
+            
+            Path waterPath = Paths.get("src/main/resources/textures/water.gif");
+            waterTexture = new ImageIcon(waterPath.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,6 +111,27 @@ public class GridRenderer extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+
+        // Retrieve the Image object from the ImageIcon
+        Image waterImage = waterTexture.getImage();
+
+        // Create a BufferedImage from the water image
+        BufferedImage waterBufferedImage = new BufferedImage(waterImage.getWidth(null), waterImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2dWater = waterBufferedImage.createGraphics();
+        g2dWater.drawImage(waterImage, 0, 0, null);
+        g2dWater.dispose();
+
+        // Calculate the location of the rectangle that defines the region where the texture will be painted
+        int waterX = -(camera.getX() % waterImage.getWidth(null));
+        int waterY = -(camera.getY() % waterImage.getHeight(null));
+        Rectangle waterRect = new Rectangle(waterX, waterY, 128, 128);
+
+        // Create a TexturePaint object using the water image and the rectangle
+        TexturePaint waterPaint = new TexturePaint(waterBufferedImage, waterRect);
+
+        // Use the TexturePaint object to fill the panel
+        g2d.setPaint(waterPaint);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
 
         camera.applyTransform(g2d); // Use the applyTransform method from the Camera class
 
