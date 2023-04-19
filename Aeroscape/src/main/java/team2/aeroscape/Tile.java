@@ -17,7 +17,7 @@ public class Tile {
     private ArrayList<GameObject> gameObjects;
     private int[] resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
     private Miner miner;
-    
+    private Smelter smelter;
     
     public Tile() {
 }
@@ -63,6 +63,7 @@ public class Tile {
         this.gameObjects = new ArrayList<>();
         this.resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
         this.miner = miner;
+        this.smelter = smelter;
         // Defaults hasResources to false on creation
         this.resourcesGenerated = false;
         this.texture = grassTexture;
@@ -160,4 +161,13 @@ public class Tile {
     public void setMiner(Miner miner) {
         this.miner = miner;
     }
+    
+    public Smelter getSmelter() {
+        return smelter;
+    }
+
+    public void setSmelter(Smelter smelter) {
+        this.smelter = smelter;
+    }
+    
 }
