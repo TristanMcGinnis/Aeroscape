@@ -133,7 +133,7 @@ public class Aeroscape {
         final double updateTime = 1_000_000_000.0 / 60.0; // 60 updates per second
         double lastUpdateTime = System.nanoTime(); 
         double delta = 0;
-       
+        
         
         while (running) {
             double now = System.nanoTime();
