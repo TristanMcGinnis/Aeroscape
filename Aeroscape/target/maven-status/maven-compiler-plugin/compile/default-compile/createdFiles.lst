@@ -12,7 +12,6 @@ team2\aeroscape\SAM_PLATFORM.class
 team2\aeroscape\LevelData.class
 team2\aeroscape\Grid.class
 team2\aeroscape\GameSettings.class
-team2\aeroscape\EnemyHandler.class
 team2\aeroscape\Smelter.class
 team2\aeroscape\Aeroscape$1.class
 team2\aeroscape\Inventory.class
