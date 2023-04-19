@@ -26,7 +26,7 @@ public class LevelData {
     String name = "defaultPlayer";
     int lvl = 0;
     int difficulty = 0;
-    int inventory[];
+    int inventory[] = new int[10];
     int mapData[][];
     ArrayList<Miner> miners;    //Not Persistent
     FireControl FC;     //Not Persistent
@@ -94,7 +94,7 @@ public class LevelData {
     /**
      * Creates save directory if it doesn't already exist.
      */
-    public static void checkSaveDirectory()
+    public void checkSaveDirectory()
     {
         new File("saves").mkdirs();
     }
@@ -125,7 +125,7 @@ public class LevelData {
      * @param inArray The input Java Array to be converted to a JSON Array
      * @return An equivalent JSON Array 
      */
-    public static JSONArray ToJsonArr(int inArray[])
+    public JSONArray ToJsonArr(int inArray[])
     {
         JSONArray outArray = new JSONArray();
         for(int i=0; i < inArray.length; i++)
@@ -142,7 +142,7 @@ public class LevelData {
      * @param inArray The input 2D array to be converted to a 2D JSON Array
      * @return An equivalent JSON Array composed of 2 other JSON Arrays
      */
-    public static JSONArray ToJson2DArr(int inArray[][])
+    public JSONArray ToJson2DArr(int inArray[][])
     {
         JSONArray outArray = new JSONArray();
         for(int val[] : inArray)
@@ -164,7 +164,7 @@ public class LevelData {
      * @param inArray The input JSON Array to be converted to a Java Array
      * @return An equivalent Java Array
      */
-    public static int[] FromJsonArr(JSONArray inArray)
+    public int[] FromJsonArr(JSONArray inArray)
     {
         
         int outArray[] = new int[inArray.size()];
@@ -181,7 +181,7 @@ public class LevelData {
      * @param inArray The input JSON Array to be converted to a 2D Java Array
      * @return An equivalent 2D Java Array
      */
-    public static int[][] FromJson2DArr(JSONArray inArray)
+    public int[][] FromJson2DArr(JSONArray inArray)
     {
         int outArray[][] = new int[inArray.size()][((JSONArray) inArray.get(0)).size()];
         //System.out.println("arraySize: "+inArray.size());
@@ -204,7 +204,7 @@ public class LevelData {
      * 
      * @param player The input Player object containing all the LevelData data needing to be saved
      */
-    public static void logData(LevelData player)
+    public void logData(LevelData player)
     {
         //debug
         //System.out.println("Attempting to save data");
@@ -250,7 +250,7 @@ public class LevelData {
      * @param name The input name used to locate the file for the corresponding LevelData
      * @return Data as a LevelData object just as it was originally entered with <code>logData</code>
      */
-    public static LevelData loadData(String name)
+    public LevelData loadData(String name)
     {
         String logFilePath = "saves/"+name+"Log.json";
         
@@ -318,7 +318,7 @@ public class LevelData {
      * @param tiles array of tiles stored in the Grid (the whole map)
      * @return An Array of IDs representing the contents of each tile
     */
-    public static int[][] tiles2MapData(Tile tiles[][])
+    public int[][] tiles2MapData(Tile tiles[][])
     {
         int mapSize = tiles[0].length;
         int[][] mapData = new int[mapSize][mapSize];
@@ -382,14 +382,19 @@ public class LevelData {
     
     /**
      * Converts MapData array IDs back into a tile array for regenerating the grid from a save
+     * Data must be read from JSON save before this will run properly
      * 
      * @param mapData Array of grid IDs converted for saving
+     * @param inv Player inventory, used for adding miners to the tiles
      * @return An array of tiles reconstructed from save data grid state IDs
      */
-    public static Tile[][] mapData2Tiles(int[][] mapData)
+    public Tile[][] mapData2Tiles(int[][] mapData, Inventory inv)
     {
         int mapSize = mapData.length;
         Tile[][] tiles = new Tile[mapSize][mapSize];
+        
+        //NEED to use the inventory of main Aeroscape to create miners and smeleters from the data
+        
         
         for (int i = 0; i < mapSize; i++)
         {
@@ -460,7 +465,7 @@ public class LevelData {
     /*
     //Example Main function which can be used to save and load data to test the class
     //Last Tested 4/2/23
-    public static void main(String[] args)
+    public void main(String[] args)
     {
         System.out.println("LevelData log Test Start");
         String saveName = "TestFullSave";
