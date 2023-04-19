@@ -26,7 +26,7 @@ public class LevelData {
     String name = "defaultPlayer";
     int lvl = 0;
     int difficulty = 0;
-    int inventory[];
+    int inventory[] = new int[10];
     int mapData[][];
     ArrayList<Miner> miners;    //Not Persistent
     FireControl FC;     //Not Persistent
@@ -51,12 +51,24 @@ public class LevelData {
         this.miners = new ArrayList<Miner>();   //Not Persistent
         this.FC = new FireControl();    //Not Persistent
 
-        
-        for (int i = 0; i < mapData.length; i++) {
-            for (int j = 0; j < mapData[0].length; j++) {
-                this.mapData[i][j] = mapData[i][j];
-            }
-        }
+        this.mapData = mapData;
+    }
+    
+    
+    public void updateInventory(Inventory inv)
+    {
+        this.inventory[0] = inv.getCoal();
+        this.inventory[1] = inv.getCopper();
+        this.inventory[2] = inv.getIron();
+        this.inventory[3] = inv.getGold();
+        this.inventory[4] = inv.getCopperIngot();
+        this.inventory[5] = inv.getIronIngot();
+        this.inventory[6] = inv.getGoldIngot();
+    }
+    
+    public void updateMapData(Tile[][] tiles)
+    {
+        mapData = tiles2MapData(tiles);
     }
     
     /**
@@ -76,20 +88,13 @@ public class LevelData {
         this.mapData = new int[mapData.length][mapData[0].length];
         this.miners = new ArrayList<Miner>();   //Not Persistent
         this.FC = new FireControl();    //Not Persistent
-
-        
-        for (int i = 0; i < mapData.length; i++) {
-            for (int j = 0; j < mapData[0].length; j++) {
-                this.mapData[i][j] = mapData[i][j];
-            }
-        }
     }
     
     
     /**
      * Creates save directory if it doesn't already exist.
      */
-    public static void checkSaveDirectory()
+    public void checkSaveDirectory()
     {
         new File("saves").mkdirs();
     }
@@ -120,7 +125,7 @@ public class LevelData {
      * @param inArray The input Java Array to be converted to a JSON Array
      * @return An equivalent JSON Array 
      */
-    public static JSONArray ToJsonArr(int inArray[])
+    public JSONArray ToJsonArr(int inArray[])
     {
         JSONArray outArray = new JSONArray();
         for(int i=0; i < inArray.length; i++)
@@ -137,7 +142,7 @@ public class LevelData {
      * @param inArray The input 2D array to be converted to a 2D JSON Array
      * @return An equivalent JSON Array composed of 2 other JSON Arrays
      */
-    public static JSONArray ToJson2DArr(int inArray[][])
+    public JSONArray ToJson2DArr(int inArray[][])
     {
         JSONArray outArray = new JSONArray();
         for(int val[] : inArray)
@@ -159,7 +164,7 @@ public class LevelData {
      * @param inArray The input JSON Array to be converted to a Java Array
      * @return An equivalent Java Array
      */
-    public static int[] FromJsonArr(JSONArray inArray)
+    public int[] FromJsonArr(JSONArray inArray)
     {
         
         int outArray[] = new int[inArray.size()];
@@ -176,7 +181,7 @@ public class LevelData {
      * @param inArray The input JSON Array to be converted to a 2D Java Array
      * @return An equivalent 2D Java Array
      */
-    public static int[][] FromJson2DArr(JSONArray inArray)
+    public int[][] FromJson2DArr(JSONArray inArray)
     {
         int outArray[][] = new int[inArray.size()][((JSONArray) inArray.get(0)).size()];
         //System.out.println("arraySize: "+inArray.size());
@@ -199,7 +204,7 @@ public class LevelData {
      * 
      * @param player The input Player object containing all the LevelData data needing to be saved
      */
-    public static void logData(LevelData player)
+    public void logData(LevelData player)
     {
         //debug
         //System.out.println("Attempting to save data");
@@ -245,7 +250,7 @@ public class LevelData {
      * @param name The input name used to locate the file for the corresponding LevelData
      * @return Data as a LevelData object just as it was originally entered with <code>logData</code>
      */
-    public static LevelData loadData(String name)
+    public LevelData loadData(String name)
     {
         String logFilePath = "saves/"+name+"Log.json";
         
@@ -306,11 +311,161 @@ public class LevelData {
                         return null;
                     }
     }
+    /**
+     * Converts map tiles into MapData by converting tile data to a single ID which represents the state of the tile (what's on it)
+     * 
+     * 
+     * @param tiles array of tiles stored in the Grid (the whole map)
+     * @return An Array of IDs representing the contents of each tile
+    */
+    public int[][] tiles2MapData(Tile tiles[][])
+    {
+        int mapSize = tiles[0].length;
+        int[][] mapData = new int[mapSize][mapSize];
+        int[] tileResources = new int[4];
+        for(int i = 0; i < mapSize; i++)
+        {
+            for(int j = 0; j < mapSize; j++)
+            {
+                tileResources = tiles[i][j].getResources();
+                if(tileResources[0] > 0)//Coal
+                {
+                    if(tiles[i][j].getMiner() != null)
+                    {
+                        mapData[i][j] = 11; //Coal ore w/ miner
+                    }else
+                    {
+                        mapData[i][j] = 10; //Coal ore W/o Miner
+                    }
+                }else if(tileResources[1] > 0)//Copper
+                {
+                    if(tiles[i][j].getMiner() != null)
+                    {
+                        mapData[i][j] = 21; //Copper ore w/ miner
+                    }else
+                    {
+                        mapData[i][j] = 20; //Copper ore W/o Miner
+                    }
+                }else if(tileResources[2] > 0)//Iron
+                {
+                    if(tiles[i][j].getMiner() != null)
+                    {
+                        mapData[i][j] = 31; //Iron ore w/ miner
+                    }else
+                    {
+                        mapData[i][j] = 30; //Iron ore W/o Miner
+                    }
+                }else if(tileResources[3] > 0)//Gold
+                {
+                    if(tiles[i][j].getMiner() != null)
+                    {
+                        mapData[i][j] = 41; //Gold ore w/ miner
+                    }else
+                    {
+                        mapData[i][j] = 40; //Gold ore W/o Miner
+                    }
+                }else
+                {
+                    if(tiles[i][j].getSmelter() != null)
+                    {
+                       mapData[i][j] = 1; //Grass W/ Smelter
+                    }else
+                    {
+                       mapData[i][j] = 0; //Grass W/o smelter
+                    }
+                }
+                
+            }
+        }
+        return mapData;
+    }
     
+    /**
+     * Converts MapData array IDs back into a tile array for regenerating the grid from a save
+     * Data must be read from JSON save before this will run properly
+     * 
+     * @param mapData Array of grid IDs converted for saving
+     * @param inv Player inventory, used for adding miners to the tiles
+     * @return An array of tiles reconstructed from save data grid state IDs
+     */
+    public Tile[][] mapData2Tiles(int[][] mapData, Inventory inv)
+    {
+        int mapSize = mapData.length;
+        Tile[][] tiles = new Tile[mapSize][mapSize];
+        
+        //NEED to use the inventory of main Aeroscape to create miners and smeleters from the data
+        
+        
+        for (int i = 0; i < mapSize; i++)
+        {
+            for(int j = 0; j < mapSize; j++)
+            {
+                switch (mapData[i][j]) {
+                //Grass Tile
+                    case 0:
+                        tiles[i][j] = new Tile(i, j, true);
+                        break;
+                //Grass Tile W/ Smelter
+                    case 1:
+                        tiles[i][j] = new Tile(i, j, false);
+                        //add smelter
+                        break;
+                //Coal Ore W/o Miner
+                    case 10:
+                        tiles[i][j] = new Tile(i, j, true);
+                        tiles[i][j].addResource(0,999999);
+                        break;
+                //Coal Ore W/ Miner
+                    case 11:
+                        tiles[i][j] = new Tile(i, j, false);
+                        tiles[i][j].addResource(0, 999999);
+                        //add miner
+                        break;
+                //Copper Ore W/o Miner
+                    case 20:
+                        tiles[i][j] = new Tile(i, j, true);
+                        tiles[i][j].addResource(1, 999999);
+                        break;
+                //Copper Ore W Miner
+                    case 21:
+                        tiles[i][j] = new Tile(i, j, false);
+                        tiles[i][j].addResource(1, 999999);
+                        //add miner
+                        break;
+                //Iron Ore W/o Miner
+                    case 30:
+                        tiles[i][j] = new Tile(i, j, true);
+                        tiles[i][j].addResource(2, 999999);
+                        break;
+                //Iron Ore W Miner
+                    case 31:
+                        tiles[i][j] = new Tile(i, j, false);
+                        tiles[i][j].addResource(2, 999999);
+                        //add miner
+                        break;
+                //Gold Ore W/o Miner
+                    case 40:
+                        tiles[i][j] = new Tile(i, j, true);
+                        tiles[i][j].addResource(3, 999999);
+                        break;
+                //Gold Ore W Miner
+                    case 41:
+                        tiles[i][j] = new Tile(i, j, false);
+                        tiles[i][j].addResource(3, 999999);
+                        //add miner
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        
+        return null;
+    }
     /*
     //Example Main function which can be used to save and load data to test the class
     //Last Tested 4/2/23
-    public static void main(String[] args)
+    public void main(String[] args)
     {
         System.out.println("LevelData log Test Start");
         String saveName = "TestFullSave";

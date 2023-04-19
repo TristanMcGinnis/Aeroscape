@@ -19,6 +19,10 @@ public final class MainMenu extends JFrame {
     private JButton quitButton;
     private final int numBtns = 4;
     
+    private JTextField nameRequest;
+    private JTextField nameEnter;
+    private JButton nameButton;
+    
     public MainMenu() {
         // Set the window title
         setTitle("Aeroscape Launcher");
@@ -28,6 +32,12 @@ public final class MainMenu extends JFrame {
         optionsButton = new JButton("Options");
         quitButton = new JButton("Quit");
         
+        nameRequest = new JTextField("Please enter the player's name");
+        nameEnter = new JTextField();
+        nameButton = new JButton("Enter");
+        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         // Set the layout manager for the window
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         
@@ -43,17 +53,27 @@ public final class MainMenu extends JFrame {
         // Set the behavior for the buttons
         newGameButton.addActionListener((ActionEvent e) -> {
             // Add code to start the game here
-            System.out.println("Creating new game...");
-            SwingUtilities.invokeLater(() -> {
-                Aeroscape initialize = new Aeroscape();
-                initialize.init();
-            });
-            dispose();
+            
+            RequestPlayerNameNew();
+            
+            
+            //Now executes the next few commented out lines from the button added in RequestPlayerNameNew
+            
+            //System.out.println("Creating new game...");
+            //SwingUtilities.invokeLater(() -> {
+                //Aeroscape initialize = new Aeroscape();
+                //initialize.init();
+            //});
+            //dispose();
             //setVisible(false);
         });
         loadGameButton.addActionListener((ActionEvent e) -> {
             // Add code to load the game here
-            System.out.println("Loading saved game...");
+           
+            System.out.println("Opening Load Menu");
+
+            RequestPlayerNameLoad();
+            
         });
         optionsButton.addActionListener((ActionEvent e) -> {
             // Add code to display options here
@@ -98,5 +118,108 @@ public final class MainMenu extends JFrame {
         add(optionsButton);
         add(Box.createRigidArea(new Dimension(0, 10)));
         add(quitButton);
+    }
+    
+    private void RequestPlayerNameNew(){
+        
+        this.remove(newGameButton);
+        
+        Dimension dims = this.size();
+
+        this.setSize(300,300);
+        
+        int a = 1;
+        
+        nameRequest.setAlignmentY(a++*dims.height/(this.numBtns+1));
+        nameButton.setAlignmentY(a++*dims.height/(this.numBtns+1));
+        nameEnter.setAlignmentY(a++*dims.height/(this.numBtns+1));
+        
+        nameRequest.setAlignmentX(Component.CENTER_ALIGNMENT);
+        nameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        nameEnter.setAlignmentX(Component.CENTER_ALIGNMENT);  
+      
+        nameRequest.setSize(10, 2);
+        nameEnter.setSize(10,2);
+      
+        nameRequest.setEditable(false);
+
+      
+        add(nameRequest);
+      
+        add(Box.createRigidArea(new Dimension(0, 10)));
+
+        add(nameEnter);
+      
+        add(Box.createRigidArea(new Dimension(0, 10)));
+
+        add(nameButton);
+      
+        nameButton.addActionListener((ActionEvent e) -> {
+            
+            //This function is almost entirely pulled from the original new game button's code, except it puts a playerName into Aeroscape
+            // Add code to load the game here
+            System.out.println("getting name");
+            
+            //Grabs the name from the nameEnter text field
+
+            String name = nameEnter.getText();
+            
+            System.out.println("Creating new game...");
+            SwingUtilities.invokeLater(() -> {
+                Aeroscape initialize = new Aeroscape(name);
+                initialize.init();
+            });
+            dispose();
+        });
+      
+    }
+    
+    private void RequestPlayerNameLoad(){
+        
+        this.remove(loadGameButton);
+        
+        Dimension dims = this.size();
+
+        this.setSize(300,300);
+        
+        int a = 1;
+        
+        nameRequest.setAlignmentY(a++*dims.height/(this.numBtns+1));
+        nameButton.setAlignmentY(a++*dims.height/(this.numBtns+1));
+        nameEnter.setAlignmentY(a++*dims.height/(this.numBtns+1));
+      
+        nameRequest.setAlignmentX(Component.CENTER_ALIGNMENT);
+        nameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        nameEnter.setAlignmentX(Component.CENTER_ALIGNMENT);       
+        
+        
+        nameRequest.setEditable(false);
+        nameRequest.setSize(10, 2);
+        nameEnter.setSize(10,2);
+      
+        add(nameRequest);
+        add(Box.createRigidArea(new Dimension(0, 10)));
+
+        add(nameEnter);
+        add(Box.createRigidArea(new Dimension(0, 10)));
+
+        add(nameButton);
+      
+        nameButton.addActionListener((ActionEvent e) -> {
+            // Add code to load the game here
+            
+            //Grabs the name from the nameEnter text field
+            String name = nameEnter.getText();
+            
+            //Load Game from here using the inputted name
+            
+            System.out.println("Loading saved game...");
+            //SwingUtilities.invokeLater(() -> {
+            //    Aeroscape initialize = new Aeroscape(name);
+            //    initialize.init();
+            //});
+            //dispose();
+        });
+      
     }
 }

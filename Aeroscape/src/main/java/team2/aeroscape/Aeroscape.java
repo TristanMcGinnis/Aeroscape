@@ -34,6 +34,14 @@ public class Aeroscape {
         levelData = new LevelData("defaultPlayer", 1, 0, new int[10], new int[100][100]);
     }
     
+    public Aeroscape(String playerName) {
+        player = new Player(300, 300);
+        camera = new Camera(0, 0, 1.0);
+        inventory = new Inventory();
+        levelData = new LevelData(playerName, 1, 0, new int[10], new int[100][100]);
+        
+        System.out.println("Player name = " + playerName);
+    }
     
     public static void main(String[] args) {
         Aeroscape aeroscape = new Aeroscape();
@@ -128,7 +136,7 @@ public class Aeroscape {
     * are updated and the delta time is decremented. The game entities are then rendered. This loop runs continuously while the 
     * running flag is set to true, ensuring that the game is constantly updating and rendering.
     */
-    public void gameLoop() {
+public void gameLoop() {
         System.out.println("Game Loop Initialized");
         //final double updateTime = 1_000_000_000.0 / 60.0; // 60 updates per second
         final double updateTime = 1000/60; //60 Updates per second
@@ -146,7 +154,6 @@ public class Aeroscape {
             while (delta < updateTime) {
                 delta = System.currentTimeMillis() - lastUpdateTime;
             }
-            System.out.println("Rendering after delta of" + delta);
 
 //            while (delta >= 1) {
 //                update(delta); // Update game entities
