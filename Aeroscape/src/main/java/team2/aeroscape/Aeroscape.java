@@ -130,20 +130,15 @@ public class Aeroscape {
     */
     public void gameLoop() {
         System.out.println("Game Loop Initialized");
-        final double updateTime = 1_000_000_000.0 / 60.0; // 60 updates per second
-        double lastUpdateTime = System.nanoTime(); 
         double delta = 0;
         
         
         while (running) {
-            double now = System.nanoTime();
-            delta += (now - lastUpdateTime) / updateTime;
             lastUpdateTime = now;
-
-            while (delta >= 1) {
-                update(delta); // Update game entities
-                delta--;
+            
+            
             }
+           
             render(); // Render the game entities
             //sync(); // Synchronize the game loop if needed
             
@@ -177,7 +172,6 @@ public class Aeroscape {
         }
         
         //In theory shouldn't need this. gridRenderer should update all tiles or more effeciently only building types
-
         for (Miner miner : levelData.getMiners()) {
             miner.update();
         }      
