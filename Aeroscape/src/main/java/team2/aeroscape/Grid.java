@@ -34,8 +34,7 @@ public class Grid {
             for (int j = 0; j < tiles[i].length; j++) {
                 float brightness = rand.nextFloat() * 0.5f + 0.25f;  // Range: 0.25 to 0.75
                 int grayValue = (int) (brightness * 255);
-                Color randomColor = new Color(grayValue, grayValue, grayValue);
-                tiles[i][j] = new Tile(i, j, true, randomColor);
+                tiles[i][j] = new Tile(i, j, true);
 
                 // randomly generate resources
                 for (int resourceType = 0; resourceType < probabilities.length; resourceType++) {

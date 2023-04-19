@@ -2,6 +2,12 @@ package team2.aeroscape;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Tile {
     protected int x;
@@ -11,24 +17,58 @@ public class Tile {
     private ArrayList<GameObject> gameObjects;
     private int[] resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
     private Miner miner;
+    
+    
     public Tile() {
-        
-    }
+}
     
     //Initialize tile with no building
     //Tracks whether or not an individual tile has any resources or not; checked in Grid.generateResources()
     private boolean resourcesGenerated;
-    public Tile(int x, int y, boolean walkable, Color color) {
+    
+    
+    private static BufferedImage ironTexture;
+    private static BufferedImage copperTexture;
+    private static BufferedImage goldTexture;
+    private static BufferedImage coalTexture;
+    private static BufferedImage grassTexture;
+    private BufferedImage texture;
+    
+    static {
+        try {
+            Path ironPath = Paths.get("src/main/resources/textures/iron.png");
+            Path copperPath = Paths.get("src/main/resources/textures/copper.png");
+            Path goldPath = Paths.get("src/main/resources/textures/gold.png");
+            Path coalPath = Paths.get("src/main/resources/textures/coal.png");
+            Path grassPath = Paths.get("src/main/resources/textures/grass.png");
+
+            ironTexture = ImageIO.read(Files.newInputStream(ironPath));
+            copperTexture = ImageIO.read(Files.newInputStream(copperPath));
+            goldTexture = ImageIO.read(Files.newInputStream(goldPath));
+            coalTexture = ImageIO.read(Files.newInputStream(coalPath));
+            grassTexture = ImageIO.read(Files.newInputStream(grassPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
+    public Tile(int x, int y, boolean walkable) {
         this.x = x;
         this.y = y;
         this.walkable = walkable;
-        this.color = color;
+     
+        
         this.gameObjects = new ArrayList<>();
         this.resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
         this.miner = miner;
-        //Defaults hasResources to false on creation
+        // Defaults hasResources to false on creation
         this.resourcesGenerated = false;
+        this.texture = grassTexture;
+        
     }
+
     
     //Copy Constructor
     public Tile(Tile tile) {
@@ -86,28 +126,32 @@ public class Tile {
 
     
     public void draw(Graphics2D g2d, int tileSize) {
-        if (miner != null) {
-            g2d.setColor (Color.blue);
-        }
-        else if (resources[0] > 0) {
-            // Show iron color
-            g2d.setColor(new Color (228,161,86));
+        BufferedImage currentTexture = texture;
+
+        if (resources[0] > 0) {
+            // Set iron texture
+            currentTexture = ironTexture;
         } else if (resources[1] > 0) {
-            // Show copper color
-            g2d.setColor(new Color (255, 140, 0));
+            // Set copper texture
+            currentTexture = copperTexture;
         } else if (resources[2] > 0) {
-            // Show gold color
-            g2d.setColor(Color.yellow);
+            // Set gold texture
+            currentTexture = goldTexture;
         } else if (resources[3] > 0) {
-            // Show coal color
-            g2d.setColor(Color.black);
+            // Set coal texture
+            currentTexture = coalTexture;
         } else {
-            // Show default color
-            g2d.setColor(color);
+            currentTexture = grassTexture;
         }
 
-        g2d.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+        g2d.drawImage(currentTexture, x * tileSize, y * tileSize, tileSize, tileSize, null);
+
+        // Draw the miner texture on top of the current texture if a miner is present
+        if (miner != null) {
+            g2d.drawImage(miner.getTexture(), x * tileSize, y * tileSize, tileSize, tileSize, null);
+        }
     }
+
     
     public Miner getMiner() {
         return miner;
