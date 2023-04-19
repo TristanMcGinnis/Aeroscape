@@ -22,19 +22,14 @@ public class EnemyHandler {
         this.worldSpace[0] = tilesX * meterScale; this.worldSpace[1] = tilesY * meterScale;
     }
     
- 
     /*
     Adds a missile to the flyers list.
     Returns true if sucessful
     Used exclusively by the update method.
     */
-    private boolean initMissile(Tile location, Building target) {
-        BMissile missile = new BMissile(location, target);
+    private boolean addMissile(Tile location, Tile target) {
         return true;
     }
-    
-    
-    
     
     /*
     Updates the EnemyHandler class on a time basis.
