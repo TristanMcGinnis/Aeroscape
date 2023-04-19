@@ -8,7 +8,19 @@ import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Iterator;
+import javax.sound.sampled.FloatControl;
 /**
  * CS 321-01 TEAM 2
  * AEROSCAPE
@@ -56,7 +68,7 @@ public class Aeroscape {
         System.out.println("Init");
         gridRenderer = new GridRenderer(camera, player, levelData, inventory);
 
-        
+        playBackgroundSong();
         JFrame frame = createGameWindow();
         addListeners(frame);
        
@@ -224,5 +236,33 @@ public void gameLoop() {
         int screenWidth = gridRenderer.getWidth();
         int screenHeight = gridRenderer.getHeight();
         camera.follow(player.getX(), player.getY(), screenWidth, screenHeight);
+    }
+    
+    
+    private void playBackgroundSong() {
+        Path audioPath = Paths.get("src/main/resources/sfx/MainMusic.wav");
+        try {
+            URL audioURL = audioPath.toUri().toURL();
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioURL);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            float decibels = -45.0f; // Adjust this value to control the volume, negative values reduce the volume
+            gainControl.setValue(decibels);
+
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (MalformedURLException e) {
+            System.err.println("Error: Invalid URL for the audio file.");
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            System.err.println("Error: Unsupported audio file format.");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("Error: Unable to read the audio file.");
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            System.err.println("Error: Audio line is unavailable.");
+            e.printStackTrace();
+        }
     }
 }
