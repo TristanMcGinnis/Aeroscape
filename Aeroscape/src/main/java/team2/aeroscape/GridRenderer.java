@@ -201,7 +201,7 @@ public class GridRenderer extends JPanel {
 
         // Place a miner on the tile, if there's no miner yet
         if (tile != null && tile.hasResources() && tile.getMiner() == null) {
-            Miner miner = new Miner(grid, inventory, tile);
+            Miner miner = new Miner(inventory, tile);
             tile.setMiner(miner);
             levelData.addMiner(miner);
 

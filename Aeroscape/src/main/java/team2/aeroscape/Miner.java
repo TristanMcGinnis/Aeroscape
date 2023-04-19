@@ -18,7 +18,7 @@ public class Miner extends Building {
     private Tile tile;
     private static BufferedImage minerTexture;
     
-    public Miner(Grid grid, Inventory inventory, Tile tile) {
+    public Miner(Inventory inventory, Tile tile) {
         super(50, 50, tile); // Set the width and height of the Miner building
         color = new Color(0,0,255);
         this.inventory = inventory;
