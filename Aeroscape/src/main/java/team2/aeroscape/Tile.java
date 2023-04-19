@@ -162,6 +162,16 @@ public class Tile {
         this.miner = miner;
     }
     
+    public boolean hasResources() {
+        // Check if the tile has any resources
+        for (int resourceAmount : resources) {
+            if (resourceAmount > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Smelter getSmelter() {
         return smelter;
     }
@@ -169,5 +179,4 @@ public class Tile {
     public void setSmelter(Smelter smelter) {
         this.smelter = smelter;
     }
-    
 }

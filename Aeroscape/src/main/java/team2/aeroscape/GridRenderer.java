@@ -2,6 +2,7 @@ package team2.aeroscape;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -94,7 +95,7 @@ public class GridRenderer extends JPanel {
         camera.resetTransform(g2d); // Use the resetTransform method from the Camera class
      
         renderMiners(g2d);
-        
+        drawResources(g2d);
         g2d.dispose();
     }
     
@@ -105,6 +106,26 @@ public class GridRenderer extends JPanel {
         g2d.setColor(Color.RED);
         g2d.fillOval(player.getX() - CIRCLE_RADIUS, player.getY() - CIRCLE_RADIUS, CIRCLE_RADIUS * 2, CIRCLE_RADIUS * 2);
     }
+    
+    private void drawResources(Graphics2D g2d) {
+        // Set color and font
+        g2d.setColor(Color.BLACK);
+        g2d.setFont(new Font("Arial", Font.PLAIN, 20));
+
+        // Get resources from the inventory
+        int iron = inventory.getIron();
+        int copper = inventory.getCopper();
+        int gold = inventory.getGold();
+        int coal = inventory.getCoal();
+
+        // Draw the resource text on the top left of the screen
+        g2d.drawString("Iron: " + iron, 10, 30);
+        g2d.drawString("Copper: " + copper, 10, 60);
+        g2d.drawString("Gold: " + gold, 10, 90);
+        g2d.drawString("Coal: " + coal, 10, 120);
+    }
+
+    
     
     /**
      * Handles key presses by updating the player's velocity and repainting the panel.
@@ -161,7 +182,7 @@ public class GridRenderer extends JPanel {
         Tile tile = grid.getTile(gridX / GRID_SIZE, gridY / GRID_SIZE);
 
         // Place a miner on the tile, if there's no miner yet
-        if (tile != null && tile.getMiner() == null) {
+        if (tile != null && tile.hasResources() && tile.getMiner() == null) {
             Miner miner = new Miner(grid, inventory, tile);
             tile.setMiner(miner);
             levelData.addMiner(miner);
