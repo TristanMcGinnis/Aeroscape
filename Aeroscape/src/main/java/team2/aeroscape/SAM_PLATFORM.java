@@ -22,12 +22,12 @@ public class SAM_PLATFORM extends Building {
     Launches a SAM at the current target.
     Returns false if launch was not possible
     */
-    public boolean launchSAM(FireControl FC, float targetX, float targetY) {
+    public boolean launchSAM(FireControl FC, Missile target) {
         if (samCount < 0) 
             return false;
         
         samCount--;
-        SAM sam = new SAM(this, targetX, targetY);
+        SAM sam = new SAM(this, target);
         FC.addSam(sam);
         return true;
     }
