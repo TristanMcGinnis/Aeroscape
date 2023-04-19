@@ -160,4 +160,14 @@ public class Tile {
     public void setMiner(Miner miner) {
         this.miner = miner;
     }
+    
+    public boolean hasResources() {
+        // Check if the tile has any resources
+        for (int resourceAmount : resources) {
+            if (resourceAmount > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
