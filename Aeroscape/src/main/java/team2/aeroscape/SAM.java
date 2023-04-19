@@ -11,25 +11,50 @@ package team2.aeroscape;
  * 
  */
 public class SAM extends Missile {
-    static float burnOutVel = 4000; //m/s  //Each grid with be 1km^2
     
-    
+    private Missile target;
+    private int killRadius = 100;
     
     //Initialize position of SAM at the position of the platfrom
-    public SAM(Tile plt, double targetX, double targetY) {
+    public SAM(Tile plt, Missile target) {
         super(plt);
-        this.targetP[0] = targetX; this.targetP[1] = targetY; this.targetP[2] = 0;
+        this.target = target;
+        
+        
+        if (target != null) { //If has actual target
+            double[] props = MinTimeIntercept_BF(target); //az, time, min d2t
+            this.alignVel2Heading(burnoutVel, props[0]);
+        } 
     }
-    
-
-    
     
     /*
-    Finds the heading(Azimuth) need to intercept a given target.
+    Update method for a SAM missile(Missile with a nonmoving ground target).
+    Checks if within hit tolerance of target, target no longer active, and checks if timeout has been hit
+    Returns false when condition is met
+    Returns true as long as missile is active
     */
-    public void findInterceptAz(BMissile target) {
+    protected boolean update() {
+        long currTime = System.currentTimeMillis();
+        if (1000*currTime - launchTime > maxFlightTime || target == null) {
+            return false;
+        }
+        float timeDelta = (currTime - lastTime) / 1000.0f; //Time in seconds 
+        lastTime = currTime;
         
+        P[0] = P[0] + V[0]*timeDelta;
+        P[1] = P[1] + V[1]*timeDelta;
+        //P[3] arbitrary for now
+        
+        
+        //Kill target
+        if (getSlantRange(target.P) < killRadius) {
+            target.destroy(); //Sets target active flag to false
+            this.destroy(); //Sets self active flag to false although probably redundant.
+            return false;
+        }
+        return true;
     }
+    
     
     
     /*
@@ -37,7 +62,7 @@ public class SAM extends Missile {
     Multivariate Equation Solver would be more ideal in future 
     Returns Best Azimuth[0], Best Time[1], minDistance[2]
     */
-    public double[] MinTimeIntercept_BF(BMissile target) {
+    private double[] MinTimeIntercept_BF(Missile target) {
         double dt = .1; //Time increment
         double minDistance = Double.MAX_VALUE;
         double bestAz = 0;
