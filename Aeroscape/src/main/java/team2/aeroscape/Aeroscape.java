@@ -28,12 +28,14 @@ public class Aeroscape {
     private boolean isZooming;
 
 
-    public Aeroscape(String playerName) {
-        player = new Player(3000, 3000);
+    public Aeroscape(String playerName, int gridWidth, int gridHeight) {
+        int playerStartX = (gridWidth * 50) / 2;
+        int playerStartY = (gridHeight * 50) / 2;
+        player = new Player(playerStartX, playerStartY);
         camera = new Camera(0, 0, 1.5);
         inventory = new Inventory();
         levelData = new LevelData(playerName, 1, 0, new int[10], new int[100][100]);
-        gridRenderer = new GridRenderer(camera, player, levelData, inventory);
+        gridRenderer = new GridRenderer(camera, player, levelData, inventory, gridWidth, gridHeight);
         audioEngine = new AudioEngine();
         keyboardManager = new KeyboardInputManager();
         mouseManager = new MouseInputManager();
