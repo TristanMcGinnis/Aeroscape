@@ -184,7 +184,7 @@ public class GridRenderer extends JPanel {
     }
     
    
-     public void handleMinerPlacement(MouseEvent e) {
+    public void handleMinerPlacement(MouseEvent e) {
         handlePlacement(e, (tile, inventory) -> {
             // Place a miner on the tile, if there's no miner yet
             if (tile.hasResources() && tile.getMiner() == null) {
