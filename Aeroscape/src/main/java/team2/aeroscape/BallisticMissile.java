@@ -9,10 +9,10 @@ package team2.aeroscape;
  * Ballistic Missile Class.
  * Type of missile used by enemy platforms
  */
-public class BMissile extends Missile {
+public class BallisticMissile extends Missile {
     Building target;
     
-    BMissile(Tile pos, Building target) {
+    BallisticMissile(Tile pos, Building target) {
         super(pos);
         this.target = target;
         double az = getTargetHeading(target.x, target.y);
