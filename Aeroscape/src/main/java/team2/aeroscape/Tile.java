@@ -3,11 +3,6 @@ package team2.aeroscape;
 import java.awt.*;
 import java.util.ArrayList;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Tile {
     protected int x;

@@ -14,20 +14,17 @@ public class MouseInputManager extends MouseAdapter {
         mousePressed = false;
     }
 
-    // Add mousePressed method
     @Override
     public void mousePressed(MouseEvent e) {
         mousePressed = true;
         mouseEvent = e;
     }
 
-    // Add mouseReleased method
     @Override
     public void mouseReleased(MouseEvent e) {
         mousePressed = false;
     }
 
-    // Add mouseClicked method
     public void mouseClicked() {
         if (mousePressed) {
             mousePressed = false;
