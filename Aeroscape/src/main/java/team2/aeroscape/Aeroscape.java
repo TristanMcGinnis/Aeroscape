@@ -175,7 +175,9 @@ public void gameLoop() {
                     gridRenderer.handleMinerPlacement(clickEvent);
                 } else if (clickEvent.getButton() == MouseEvent.BUTTON3) { // Right mouse button
                     gridRenderer.handleSmelterPlacement(clickEvent);
-                }
+                } else if (clickEvent.getButton() == MouseEvent.BUTTON2) { // Middle Mouse Button
+                    gridRenderer.handleSamPltPlacement(clickEvent);
+                } 
             }
 
             
@@ -188,7 +190,11 @@ public void gameLoop() {
         
         for (Smelter smelter : levelData.getSmelters()) {
             smelter.update();
-        }     
+        }
+        
+        levelData.FC.update();
+        levelData.EH.update();
+        
     }
 
 

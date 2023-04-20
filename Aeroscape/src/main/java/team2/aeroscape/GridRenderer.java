@@ -205,5 +205,16 @@ public class GridRenderer extends JPanel {
             }
         });
     }
+    
+        public void handleSamPltPlacement(MouseEvent e) {
+        handlePlacement(e, (tile, inventory) -> {
+            // Place a smelter on the tile, if there's no smelter yet
+            if (tile.getSamPlatform() == null && !tile.hasResources()) {
+                SAM_PLATFORM samPlatform = new SAM_PLATFORM(tile);
+                tile.setSamPlatform(samPlatform);
+                levelData.addSamPlatform(samPlatform);
+            }
+        });
+    }
 }
 
