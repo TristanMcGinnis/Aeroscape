@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -28,11 +27,6 @@ public class LevelData {
     int difficulty = 0;
     int inventory[] = new int[10];
     int mapData[][];
-    ArrayList<Miner> miners;    //Not Persistent
-    ArrayList<Smelter> smelters;    //Not Persistent
-    ArrayList<SAM_PLATFORM> samPlatforms; //Not Persistent
-    FireControl FC;     //Not Persistent
-    EnemyHandler EH;    //Not Persistent
     
     /**
      * This constructor takes all relevant save information for logging/loading for persistence between sessions.
@@ -42,7 +36,8 @@ public class LevelData {
      * @param inventory Array of inventory values. Each index represents a set type of "resource"
      * @param mapData 2D Array storing the state of each grid of the save state. Values represent grid-state (ex: 0 is empty, 1 is MachineX, 2 is MachineY).
      */ 
-    public LevelData(String name, int lvl, int difficulty, int inventory[], int mapData[][])
+    /*
+    public LevelData(String name, int lvl, int difficulty, Inventory inventory[], Tile mapData[][])
     {
         this.name = name;
         this.lvl = lvl;
@@ -51,33 +46,49 @@ public class LevelData {
         this.mapData = mapData;
         
         this.mapData = new int[mapData.length][mapData[0].length];
-        this.miners = new ArrayList<Miner>();   //Not Persistent
-        this.smelters = new ArrayList<Smelter>();   //Not Persistent
-        this.samPlatforms = new ArrayList<SAM_PLATFORM>(); //Not Persistent
-        this.FC = new FireControl();    //Not Persistent
-        this.EH = new EnemyHandler(difficulty, 1000); //Not Persistent
-
         this.mapData = mapData;
+    }*/
+    
+    
+    public int[] getInventory()
+    {
+        return this.inventory;
     }
     
-    
-    public void updateInventory(Inventory inv)
+    public int[][] getMapData()
     {
-        this.inventory[0] = inv.getCoal();
-        this.inventory[1] = inv.getCopper();
-        this.inventory[2] = inv.getIron();
-        this.inventory[3] = inv.getGold();
-        this.inventory[4] = inv.getCopperIngot();
-        this.inventory[5] = inv.getIronIngot();
-        this.inventory[6] = inv.getGoldIngot();
+        return this.mapData;
     }
     
-    public void updateMapData(Tile[][] tiles)
+    public String getName()
     {
-        mapData = tiles2MapData(tiles);
+        return this.name;
     }
     
     /**
+     * This constructor takes all relevant save information for logging/loading for persistence between sessions.
+     * @param name The name of the save
+     * @param iInventory Array of inventory values. Each index represents a set type of "resource"
+     * @param tiles 2D Array storing the state of each grid of the save state. Values represent grid-state (ex: 0 is empty, 1 is MachineX, 2 is MachineY).
+     */ 
+    public LevelData(String name, Inventory iInventory, Tile tiles[][])
+    {
+        this.name = name;
+        this.lvl = 0;
+        this.difficulty = 0;
+        //Inventory tempInv = iInventory;
+        this.inventory[0] = iInventory.getCoal();
+        this.inventory[1] = iInventory.getCopper();
+        this.inventory[2] = iInventory.getIron();
+        this.inventory[3] = iInventory.getGold();
+        this.inventory[4] = iInventory.getCopperIngot();
+        this.inventory[5] = iInventory.getIronIngot();
+        this.inventory[6] = iInventory.getGoldIngot();
+
+        this.mapData = tiles2MapData(tiles);
+    }
+    
+        /**
      * This constructor takes all relevant save information for logging/loading for persistence between sessions.
      * @param name The name of the save
      * @param inventory Array of inventory values. Each index represents a set type of "resource"
@@ -86,14 +97,8 @@ public class LevelData {
     public LevelData(String name, int inventory[], int mapData[][])
     {
         this.name = name;
-        this.lvl = 0;
-        this.difficulty = 0;
-        this.inventory = inventory;
         this.mapData = mapData;
-        
-        this.mapData = new int[mapData.length][mapData[0].length];
-        this.miners = new ArrayList<Miner>();   //Not Persistent
-        this.FC = new FireControl();    //Not Persistent
+        this.inventory = inventory;
     }
     
     
@@ -104,40 +109,6 @@ public class LevelData {
     {
         new File("saves").mkdirs();
     }
-    
-    /**
-     * Adds new miners to the player's LevelData
-     * 
-     * @param miner New miner to be stored with LevelData 
-     */
-    public void addMiner(Miner miner) {
-        miners.add(miner);
-    }
-    public void addSmelter(Smelter smelter) {
-        smelters.add(smelter);
-    }
-    public void addSamPlatform(SAM_PLATFORM samPlatform) {
-        samPlatforms.add(samPlatform);
-    }
-
-    
-    /**
-     * Gets list of miners stored in the player's LevelData
-     * 
-     * @return Array list of current miners contained by <code>LevelData</code>
-    */
-    public ArrayList<Miner> getMiners() {
-        return miners;
-    }
-    
-    public ArrayList<Smelter> getSmelters() {
-        return smelters;
-    }
-    public ArrayList<SAM_PLATFORM> getSamPlatforms() {
-        return samPlatforms;
-    }
-    
-    
     
     /**
      * Converts a standard Java Array to a JSON array usable by SimpleJSON library
@@ -227,9 +198,6 @@ public class LevelData {
      */
     public void logData(LevelData player)
     {
-        //debug
-        //System.out.println("Attempting to save data");
-        
         checkSaveDirectory();
           
         
@@ -292,27 +260,14 @@ public class LevelData {
                         JSONArray jsonInv = (JSONArray) playerInfo.get("inventory");
                         int inventory[];
                         inventory = FromJsonArr(jsonInv);
-                        
-                        //DEBUG
-                        /*
-                        System.out.println("Inventory:");
-                        for(int v : inventory)
-                        {
-                            System.out.println(v);
-                        }
-                        */
-                                              
-                        
+
                         //Read & Convert the mapData array
                         JSONArray jsonLevelData = (JSONArray) playerInfo.get("mapData");
                         int mapData[][];
                         mapData = FromJson2DArr(jsonLevelData);
-                    
-                        LevelData tempData = new LevelData(name, playerLvl, difficulty, inventory, mapData);
-                        //LevelData tempData = new LevelData(name, playerLvl, difficulty, inventory, mapData);                      
-                        //System.out.println(playerInfo);
-                        //LevelData tempPlayer = new LevelData(name, playerLvl, difficulty, inventory, mapData);
-                        return tempData;
+                        
+                        LevelData returnData = new LevelData(name, inventory, mapData);
+                        return returnData;
                         //return null;
                     }catch(FileNotFoundException e)
                     {
@@ -339,7 +294,7 @@ public class LevelData {
      * @param tiles array of tiles stored in the Grid (the whole map)
      * @return An Array of IDs representing the contents of each tile
     */
-    public int[][] tiles2MapData(Tile tiles[][])
+    private int[][] tiles2MapData(Tile tiles[][])
     {
         int mapSize = tiles[0].length;
         int[][] mapData = new int[mapSize][mapSize];
@@ -409,6 +364,8 @@ public class LevelData {
      * @param inv Player inventory, used for adding miners to the tiles
      * @return An array of tiles reconstructed from save data grid state IDs
      */
+    /*
+       
     public Tile[][] mapData2Tiles(int[][] mapData, Inventory inv)
     {
         int mapSize = mapData.length;
@@ -483,6 +440,9 @@ public class LevelData {
         
         return null;
     }
+    */
+    
+    
     /*
     //Example Main function which can be used to save and load data to test the class
     //Last Tested 4/2/23
