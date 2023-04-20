@@ -127,6 +127,9 @@ public class Tile {
         if (smelter != null) {
             g2d.drawImage(TextureEngine.smelterTexture, x * tileSize, y * tileSize, tileSize, tileSize, null);
         }
+        if (samPlatform != null) {
+            g2d.drawImage(TextureEngine.sam_Tier_1_Texture, x * tileSize, y * tileSize, tileSize, tileSize, null);
+        }
     }
 
     

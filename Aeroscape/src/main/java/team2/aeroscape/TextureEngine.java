@@ -19,9 +19,10 @@ public class TextureEngine {
     public static ImageIcon waterTexture;
     public static BufferedImage playerTexture;
     public static BufferedImage waterStaticTexture;
-    public static BufferedImage samPltTexture;
+    public static BufferedImage sam_Tier_1_Texture;
+    public static BufferedImage sam_Tier_2_Texture;
+    public static BufferedImage sam_Tier_3_Texture;
     
-
     static {
         loadTextures();
     }
@@ -38,9 +39,9 @@ public class TextureEngine {
             Path playerPath = Paths.get("src/main/resources/textures/player.png");
             Path waterPath = Paths.get("src/main/resources/textures/water.gif");
             Path waterStaticPath = Paths.get("src/main/resources/textures/waterStatic.png");
-            Path samPltPath = Paths.get("src/main/resources/textures/sam_platform.png");
-
-            
+            Path sam_Tier_1_Path = Paths.get("src/main/resources/textures/sam_tier_1.png");
+            Path sam_Tier_2_Path = Paths.get("src/main/resources/textures/sam_tier_2.png");
+            Path sam_Tier_3_Path = Paths.get("src/main/resources/textures/sam_tier_3.png");
             
             ironTexture = ImageIO.read(Files.newInputStream(ironPath));
             copperTexture = ImageIO.read(Files.newInputStream(copperPath));
@@ -52,8 +53,9 @@ public class TextureEngine {
             playerTexture = ImageIO.read(Files.newInputStream(playerPath));
             waterTexture = new ImageIcon(waterPath.toString());
             waterStaticTexture = ImageIO.read(Files.newInputStream(waterStaticPath));
-            samPltTexture = ImageIO.read(Files.newInputStream(samPltPath));
-            
+            sam_Tier_1_Texture = ImageIO.read(Files.newInputStream(sam_Tier_1_Path));
+            sam_Tier_2_Texture = ImageIO.read(Files.newInputStream(sam_Tier_2_Path));
+            sam_Tier_3_Texture = ImageIO.read(Files.newInputStream(sam_Tier_3_Path));
             
         } catch (IOException e) {
             e.printStackTrace();
