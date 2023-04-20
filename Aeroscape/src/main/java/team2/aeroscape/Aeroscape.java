@@ -27,15 +27,7 @@ public class Aeroscape {
     private boolean running;
     private boolean isZooming;
 
-    
-    public Aeroscape() {
-        player = new Player(300, 300);
-        camera = new Camera(0, 0, 1.0);
-        inventory = new Inventory();
-        levelData = new LevelData("defaultPlayer", 1, 0, new int[10], new int[100][100]);
-        audioEngine = new AudioEngine();
-    }
-    
+
     public Aeroscape(String playerName) {
         player = new Player(300, 300);
         camera = new Camera(0, 0, 1.0);
@@ -46,7 +38,6 @@ public class Aeroscape {
     }
     
     public static void main(String[] args) {
-        Aeroscape aeroscape = new Aeroscape();
         MainMenu mainMenu = new MainMenu();
         System.out.println("Menu Initialized");
     }
