@@ -122,7 +122,10 @@ public class Tile {
 
         // Draw the miner texture on top of the current texture if a miner is present
         if (miner != null) {
-            g2d.drawImage(miner.getTexture(), x * tileSize, y * tileSize, tileSize, tileSize, null);
+            g2d.drawImage(TextureEngine.minerTexture, x * tileSize, y * tileSize, tileSize, tileSize, null);
+        }
+        if (smelter != null) {
+            g2d.drawImage(TextureEngine.smelterTexture, x * tileSize, y * tileSize, tileSize, tileSize, null);
         }
     }
 

@@ -1,13 +1,8 @@
 package team2.aeroscape;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import javax.imageio.ImageIO;
+
 
 
 public class Miner extends Building {
@@ -16,27 +11,23 @@ public class Miner extends Building {
     private long miningInterval = 5000; // Set the idle time between mining actions in milliseconds
     private Inventory inventory;
     private Tile tile;
+
     private static BufferedImage minerTexture;
+    
     
     public Miner(Inventory inventory, Tile tile) {
         super(50, 50, tile); // Set the width and height of the Miner building
         color = new Color(0,0,255);
         this.inventory = inventory;
         this.tile = tile;
-    }
-
-    static {
-        try {
-            Path minerPath = Paths.get("src/main/resources/textures/miner.png");
-
-
-
-            minerTexture = ImageIO.read(Files.newInputStream(minerPath));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
+        minerTexture = TextureEngine.minerTexture;
     }
     
+    static {
+        // This will trigger the static block in TextureEngine, loading the textures
+        new TextureEngine();
+    }
     
     @Override
     public void update() {
@@ -88,21 +79,7 @@ public class Miner extends Building {
         }
     }
 
-
-
-    @Override
-    public void render(Graphics2D g2d, Camera camera) {
-        g2d.setColor(Color.BLUE);
-        int minerSize = 50; // Set the size of the miner
-
-        int screenX = (int) ((x - camera.getX()) * camera.getZoom());
-        int screenY = (int) ((y - camera.getY()) * camera.getZoom());
-
-        // Render the miner at the calculated on-screen position
-        g2d.drawImage(TextureEngine.minerTexture, screenX, screenY, (int) (minerSize * camera.getZoom()), (int) (minerSize * camera.getZoom()), null);
-        
-    }
-        public BufferedImage getTexture() {
+    public BufferedImage getTexture() {
         return minerTexture;
     }   
 }

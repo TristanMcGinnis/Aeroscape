@@ -3,6 +3,7 @@ package team2.aeroscape;
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.sound.sampled.Clip;
 import javax.swing.SwingUtilities;
@@ -35,7 +36,7 @@ public class Aeroscape {
         gridRenderer = new GridRenderer(camera, player, levelData, inventory);
         audioEngine = new AudioEngine();
         keyboardManager = new KeyboardInputManager();
-        mouseManager = new MouseInputManager(gridRenderer);
+        mouseManager = new MouseInputManager();
         System.out.println("Player name = " + playerName);
         running = true;
     }
@@ -168,7 +169,15 @@ public void gameLoop() {
             camera.setX((int) newX);
             camera.setY((int) newY);
 
-            mouseManager.mouseClicked();
+            MouseEvent clickEvent = mouseManager.getMouseClickEvent();
+            if (clickEvent != null) {
+                if (clickEvent.getButton() == MouseEvent.BUTTON1) { // Left mouse button
+                    gridRenderer.handleMinerPlacement(clickEvent);
+                } else if (clickEvent.getButton() == MouseEvent.BUTTON3) { // Right mouse button
+                    gridRenderer.handleSmelterPlacement(clickEvent);
+                }
+            }
+
             
         } catch (Exception NullPointerException) {
             System.out.println("Null Pointer");
@@ -176,6 +185,10 @@ public void gameLoop() {
         for (Miner miner : levelData.getMiners()) {
             miner.update();
         }      
+        
+        for (Smelter smelter : levelData.getSmelters()) {
+            smelter.update();
+        }     
     }
 
 

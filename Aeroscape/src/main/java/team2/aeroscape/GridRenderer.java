@@ -10,11 +10,6 @@ import java.awt.Rectangle;
 import java.awt.TexturePaint;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -37,20 +32,15 @@ public class GridRenderer extends JPanel {
     private final Inventory inventory;
     private int screenWidth;
     private int screenHeight;
+    private TextureEngine textureEngine;
     
     static {
-        try {
-            Path playerPath = Paths.get("src/main/resources/textures/player.png");
-            playerTexture = ImageIO.read(Files.newInputStream(playerPath));
-            
-            Path waterPath = Paths.get("src/main/resources/textures/water.gif");
-            waterTexture = new ImageIcon(waterPath.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new TextureEngine();
     }
     
-    
+    public interface Placer {
+        void place(Tile tile, Inventory inventory);
+    }
     
     /**
      * Constructs a new `GridRenderer` object with the specified `Camera`, `Player`, and `LevelData`.
@@ -63,7 +53,7 @@ public class GridRenderer extends JPanel {
         this.grid = new Grid(GRID_SIZE, camera, 100, 100);
         this.screenWidth = 1920;
         this.screenHeight = 1080;
-        
+        this.textureEngine = textureEngine;
         setPreferredSize(new Dimension(screenWidth, screenHeight));
     }
     
@@ -104,7 +94,7 @@ public class GridRenderer extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         // Retrieve the Image object from the ImageIcon
-        Image waterImage = waterTexture.getImage();
+        Image waterImage = textureEngine.waterTexture.getImage();
 
         // Create a BufferedImage from the water image
         BufferedImage waterBufferedImage = new BufferedImage(waterImage.getWidth(null), waterImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
@@ -131,7 +121,7 @@ public class GridRenderer extends JPanel {
 
         camera.resetTransform(g2d); // Use the resetTransform method from the Camera class
      
-        renderMiners(g2d);
+        //renderMiners(g2d);
         drawResources(g2d);
         g2d.dispose();
     }
@@ -142,7 +132,7 @@ public class GridRenderer extends JPanel {
     private void drawPlayer(Graphics2D g2d) {
         int x = player.getX() - CIRCLE_RADIUS;
         int y = player.getY() - CIRCLE_RADIUS;
-        g2d.drawImage(playerTexture, x, y, 2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS, null);
+        g2d.drawImage(textureEngine.playerTexture, x, y, 2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS, null);
     }
     
     private void drawResources(Graphics2D g2d) {
@@ -155,17 +145,21 @@ public class GridRenderer extends JPanel {
         int copper = inventory.getCopper();
         int gold = inventory.getGold();
         int coal = inventory.getCoal();
+        int ironIngot = inventory.getIronIngot();
+        int copperIngot = inventory.getCopperIngot();
+        int goldIngot = inventory.getGoldIngot();
 
         // Draw the resource text on the top left of the screen
         g2d.drawString("Iron: " + iron, 10, 30);
         g2d.drawString("Copper: " + copper, 10, 60);
         g2d.drawString("Gold: " + gold, 10, 90);
         g2d.drawString("Coal: " + coal, 10, 120);
+        g2d.drawString("Iron Ingot: " + ironIngot, 10, 150);
+        g2d.drawString("Copper Ingot: " + copperIngot, 10, 180);
+        g2d.drawString("Gold Ingot: " + goldIngot, 10, 210);
     }
 
-    
-   
-    public void handleMinerPlacement(MouseEvent e) {
+    private void handlePlacement(MouseEvent e, Placer placer) {
         int x = e.getX();
         int y = e.getY();
 
@@ -181,22 +175,35 @@ public class GridRenderer extends JPanel {
 
         Tile tile = grid.getTile(gridX / GRID_SIZE, gridY / GRID_SIZE);
 
-        // Place a miner on the tile, if there's no miner yet
-        if (tile != null && tile.hasResources() && tile.getMiner() == null) {
-            Miner miner = new Miner(inventory, tile);
-            tile.setMiner(miner);
-            levelData.addMiner(miner);
-
+        if (tile != null) {
+            placer.place(tile, inventory);
             repaint();
         } else {
             System.out.println("Tile not found at (" + gridX + ", " + gridY + ")");
         }
     }
+    
+   
+     public void handleMinerPlacement(MouseEvent e) {
+        handlePlacement(e, (tile, inventory) -> {
+            // Place a miner on the tile, if there's no miner yet
+            if (tile.hasResources() && tile.getMiner() == null) {
+                Miner miner = new Miner(inventory, tile);
+                tile.setMiner(miner);
+                levelData.addMiner(miner);
+            }
+        });
+    }
 
-    public void renderMiners(Graphics2D g2d) {
-        for (Miner miner : levelData.getMiners()) {
-            miner.render(g2d, camera);
-        }
+    public void handleSmelterPlacement(MouseEvent e) {
+        handlePlacement(e, (tile, inventory) -> {
+            // Place a smelter on the tile, if there's no smelter yet
+            if (tile.getSmelter() == null && !tile.hasResources()) {
+                Smelter smelter = new Smelter(inventory, tile);
+                tile.setSmelter(smelter);
+                levelData.addSmelter(smelter);
+            }
+        });
     }
 }
 

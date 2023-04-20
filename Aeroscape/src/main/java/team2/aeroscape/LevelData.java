@@ -29,6 +29,7 @@ public class LevelData {
     int inventory[] = new int[10];
     int mapData[][];
     ArrayList<Miner> miners;    //Not Persistent
+    ArrayList<Smelter> smelters;    //Not Persistent
     FireControl FC;     //Not Persistent
     
     /**
@@ -49,6 +50,7 @@ public class LevelData {
         
         this.mapData = new int[mapData.length][mapData[0].length];
         this.miners = new ArrayList<Miner>();   //Not Persistent
+        this.smelters = new ArrayList<Smelter>();   //Not Persistent
         this.FC = new FireControl();    //Not Persistent
 
         this.mapData = mapData;
@@ -107,6 +109,9 @@ public class LevelData {
     public void addMiner(Miner miner) {
         miners.add(miner);
     }
+    public void addSmelter(Smelter smelter) {
+        smelters.add(smelter);
+    }
 
     
     /**
@@ -116,6 +121,10 @@ public class LevelData {
     */
     public ArrayList<Miner> getMiners() {
         return miners;
+    }
+    
+    public ArrayList<Smelter> getSmelters() {
+        return smelters;
     }
     
     /**
