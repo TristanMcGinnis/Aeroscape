@@ -19,5 +19,4 @@ public abstract class Building extends Tile {
 
     public abstract void update();
 
-    public abstract void render(Graphics2D g2d, Camera camera);
 }

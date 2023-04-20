@@ -1,26 +1,19 @@
 package team2.aeroscape;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 
 public class Smelter extends Building {
     
     private int smeltSpeed = 1;
-    private Grid grid;
     private Inventory inventory;
     
-    public Smelter(Grid grid, Inventory inventory) {
-        super(50, 50); // Set the width and height of the Smelter building
-        this.grid = grid;
+    
+    public Smelter(Inventory inventory, Tile tile) {
+        super(50, 50, tile); // Set the width and height of the Miner building
+        color = new Color(0,0,255);
         this.inventory = inventory;
     }
     
-    public Smelter(Grid grid, Inventory inventory, Tile tile) {
-        super(50, 50, tile); // Set the width and height of the Miner building
-        color = new Color(0,0,255);
-        this.grid = grid;
-        this.inventory = inventory;
-    }
     
     @Override
     public void update() {
@@ -67,12 +60,4 @@ public class Smelter extends Building {
             inventory.addCoal(-1);
         }
     }
-    
-
-    @Override
-    public void render(Graphics2D g2d, Camera camera) {
-        g2d.setColor(Color.YELLOW);//set as Yellow, changed from BLUE for miner
-        int smelterSize = 50; // Set the size of the smelter
-        g2d.fillRect((int) ((x - camera.getX()) / camera.getZoom()), (int) ((y - camera.getY()) / camera.getZoom()), smelterSize, smelterSize);
-    }      
 }

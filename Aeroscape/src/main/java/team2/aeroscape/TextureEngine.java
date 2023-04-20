@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 public class TextureEngine {
     public static BufferedImage ironTexture;
@@ -14,7 +15,9 @@ public class TextureEngine {
     public static BufferedImage coalTexture;
     public static BufferedImage grassTexture;
     public static BufferedImage minerTexture;
-
+    public static BufferedImage smelterTexture;
+    public static ImageIcon waterTexture;
+    public static BufferedImage playerTexture;
     
     static {
         loadTextures();
@@ -28,14 +31,22 @@ public class TextureEngine {
             Path coalPath = Paths.get("src/main/resources/textures/coal.png");
             Path grassPath = Paths.get("src/main/resources/textures/grass.png");
             Path minerPath = Paths.get("src/main/resources/textures/miner.png");
+            Path smelterPath = Paths.get("src/main/resources/textures/smelter.png");
+            Path playerPath = Paths.get("src/main/resources/textures/player.png");
+            Path waterPath = Paths.get("src/main/resources/textures/water.gif");
 
-
+            
+            
             ironTexture = ImageIO.read(Files.newInputStream(ironPath));
             copperTexture = ImageIO.read(Files.newInputStream(copperPath));
             goldTexture = ImageIO.read(Files.newInputStream(goldPath));
             coalTexture = ImageIO.read(Files.newInputStream(coalPath));
             grassTexture = ImageIO.read(Files.newInputStream(grassPath));
             minerTexture = ImageIO.read(Files.newInputStream(minerPath));
+            smelterTexture = ImageIO.read(Files.newInputStream(smelterPath));
+            playerTexture = ImageIO.read(Files.newInputStream(playerPath));
+            waterTexture = new ImageIcon(waterPath.toString());
+            
             
         } catch (IOException e) {
             e.printStackTrace();
