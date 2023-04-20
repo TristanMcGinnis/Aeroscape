@@ -50,9 +50,17 @@ public class LevelData {
     }*/
     
     
-    public int[] getInventory()
+    public Inventory getInventory()
     {
-        return this.inventory;
+        Inventory returnInv = new Inventory();
+        returnInv.addCoal(this.inventory[0]);
+        returnInv.addCopper(this.inventory[1]);
+        returnInv.addIron(this.inventory[2]);
+        returnInv.addGold(this.inventory[3]);
+        returnInv.addCopperIngot(this.inventory[4]);
+        returnInv.addIronIngot(this.inventory[5]);
+        returnInv.addGoldIngot(this.inventory[6]);
+        return returnInv;
     }
     
     public int[][] getMapData()
