@@ -3,10 +3,11 @@ package team2.aeroscape;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class InputManager extends KeyAdapter {
+
+public class KeyboardInputManager extends KeyAdapter {
     private boolean up, down, left, right;
 
-    public InputManager() {
+    public KeyboardInputManager() {
         up = down = left = right = false;
     }
 

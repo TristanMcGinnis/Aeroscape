@@ -3,11 +3,7 @@ package team2.aeroscape;
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import javax.sound.sampled.Clip;
 import javax.swing.SwingUtilities;
 /**
@@ -25,18 +21,21 @@ public class Aeroscape {
     private Inventory inventory;
     private LevelData levelData;
     private AudioEngine audioEngine;
-    private InputManager inputManager;
+    private KeyboardInputManager keyboardManager;
+    private MouseInputManager mouseManager;
     private boolean running;
     private boolean isZooming;
 
 
     public Aeroscape(String playerName) {
         player = new Player(300, 300);
-        camera = new Camera(0, 0, 1.0);
+        camera = new Camera(0, 0, 1.5);
         inventory = new Inventory();
         levelData = new LevelData(playerName, 1, 0, new int[10], new int[100][100]);
+        gridRenderer = new GridRenderer(camera, player, levelData, inventory);
         audioEngine = new AudioEngine();
-        inputManager = new InputManager();
+        keyboardManager = new KeyboardInputManager();
+        mouseManager = new MouseInputManager(gridRenderer);
         System.out.println("Player name = " + playerName);
         running = true;
     }
@@ -51,7 +50,6 @@ public class Aeroscape {
     public void init() {
         // Initialize game entities and other settings here
         System.out.println("Init");
-        gridRenderer = new GridRenderer(camera, player, levelData, inventory);
 
         audioEngine.loadAudio("MainMusic", "src/main/resources/sfx/MainMusic.wav");
         audioEngine.loopSound2D("MainMusic", -45.0f, Clip.LOOP_CONTINUOUSLY);
@@ -72,30 +70,14 @@ public class Aeroscape {
     }
 
     private void addListeners(JFrame frame) {
-        frame.addKeyListener(inputManager);
+        frame.addKeyListener(keyboardManager);
+        frame.addMouseListener(mouseManager);
         gridRenderer.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 initializePositions();
             }
         });
-
-        frame.addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                handleMouseWheel(e);
-            }
-        });
-    }
-
-    private void handleMouseWheel(MouseWheelEvent e) {
-        double zoomFactor = 0.1;
-        if (e.getWheelRotation() < 0) {
-            camera.setZoom(Math.min(camera.getZoom() + zoomFactor, 3.0));
-        } else {
-            camera.setZoom(Math.max(camera.getZoom() - zoomFactor, 0.2));
-        }
-
         updateCameraPosition();
 
         gridRenderer.repaint();
@@ -152,17 +134,17 @@ public void gameLoop() {
           
             int step = (int) (5 + camera.getZoom());
 
-            if (inputManager.isUp()) {
+            if (keyboardManager.isUp()) {
                 player.setVelY(-step);
-            } else if (inputManager.isDown()) {
+            } else if (keyboardManager.isDown()) {
                 player.setVelY(step);
             } else {
                 player.stopY();
             }
 
-            if (inputManager.isLeft()) {
+            if (keyboardManager.isLeft()) {
                 player.setVelX(-step);
-            } else if (inputManager.isRight()) {
+            } else if (keyboardManager.isRight()) {
                 player.setVelX(step);
             } else {
                 player.stopX();
@@ -186,6 +168,8 @@ public void gameLoop() {
             camera.setX((int) newX);
             camera.setY((int) newY);
 
+            mouseManager.mouseClicked();
+            
         } catch (Exception NullPointerException) {
             System.out.println("Null Pointer");
         }
