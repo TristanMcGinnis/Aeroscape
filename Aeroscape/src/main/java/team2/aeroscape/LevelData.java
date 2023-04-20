@@ -23,31 +23,11 @@ import org.json.simple.parser.ParseException;
  */
 public class LevelData {
     String name = "defaultPlayer";
-    int lvl = 0;
-    int difficulty = 0;
+    int lvl = 0; //unused
+    int difficulty = 0; //unused
     int inventory[] = new int[10];
     int mapData[][];
     
-    /**
-     * This constructor takes all relevant save information for logging/loading for persistence between sessions.
-     * @param name The name of the save
-     * @param lvl The current level of the player (unused)
-     * @param difficulty The difficulty level of the save (unused)
-     * @param inventory Array of inventory values. Each index represents a set type of "resource"
-     * @param mapData 2D Array storing the state of each grid of the save state. Values represent grid-state (ex: 0 is empty, 1 is MachineX, 2 is MachineY).
-     */ 
-    /*
-    public LevelData(String name, int lvl, int difficulty, Inventory inventory[], Tile mapData[][])
-    {
-        this.name = name;
-        this.lvl = lvl;
-        this.difficulty = difficulty;
-        this.inventory = inventory;
-        this.mapData = mapData;
-        
-        this.mapData = new int[mapData.length][mapData[0].length];
-        this.mapData = mapData;
-    }*/
     
     
     public Inventory getInventory()
@@ -74,10 +54,12 @@ public class LevelData {
     }
     
     /**
-     * This constructor takes all relevant save information for logging/loading for persistence between sessions.
+     * This constructor takes all relevant save information for logging/loading for persistence between sessions. 
+     * This constructor is used outside of LevelData for managing saves.
+     * 
      * @param name The name of the save
-     * @param iInventory Array of inventory values. Each index represents a set type of "resource"
-     * @param tiles 2D Array storing the state of each grid of the save state. Values represent grid-state (ex: 0 is empty, 1 is MachineX, 2 is MachineY).
+     * @param iInventory Inventory object containing all player inventory quantities
+     * @param tiles main Tile array from the grid to be converted to a primitive data type for storage as mapData
      */ 
     public LevelData(String name, Inventory iInventory, Tile tiles[][])
     {
@@ -98,11 +80,13 @@ public class LevelData {
     
         /**
      * This constructor takes all relevant save information for logging/loading for persistence between sessions.
+     * This constructor is used only within LevelData for loading data from a save file
+     * 
      * @param name The name of the save
      * @param inventory Array of inventory values. Each index represents a set type of "resource"
      * @param mapData 2D Array storing the state of each grid of the save state. Values represent grid-state (ex: 0 is empty, 1 is MachineX, 2 is MachineY).
      */ 
-    public LevelData(String name, int inventory[], int mapData[][])
+    private LevelData(String name, int inventory[], int mapData[][])
     {
         this.name = name;
         this.mapData = mapData;
@@ -118,9 +102,9 @@ public class LevelData {
         new File("saves").mkdirs();
     }
     
+    
     /**
      * Converts a standard Java Array to a JSON array usable by SimpleJSON library
-     * 
      * 
      * @param inArray The input Java Array to be converted to a JSON Array
      * @return An equivalent JSON Array 
@@ -298,7 +282,6 @@ public class LevelData {
     /**
      * Converts map tiles into MapData by converting tile data to a single ID which represents the state of the tile (what's on it)
      * 
-     * 
      * @param tiles array of tiles stored in the Grid (the whole map)
      * @return An Array of IDs representing the contents of each tile
     */
@@ -353,10 +336,14 @@ public class LevelData {
                     if(tiles[i][j].getSmelter() != null)
                     {
                        mapData[i][j] = 1; //Grass W/ Smelter
-                    }else
+                    }else if(tiles[i][j].getSamPlatform() != null)
                     {
+                       mapData[i][j] = 2; //Grass W/ SAM Platform
+                    }else{
                        mapData[i][j] = 0; //Grass W/o smelter
                     }
+                    
+                    
                 }
                 
             }
@@ -447,59 +434,6 @@ public class LevelData {
         }
         
         return null;
-    }
-    */
-    
-    
-    /*
-    //Example Main function which can be used to save and load data to test the class
-    //Last Tested 4/2/23
-    public void main(String[] args)
-    {
-        System.out.println("LevelData log Test Start");
-        String saveName = "TestFullSave";
-        int lvl = 20;
-        int diff = 3;
-        int inventory[] = new int[]{0, 5, 10, 15};
-        int mapData[][]= new int[][]{{0, 1, 0, 1},
-                                        {1, 1, 0, 0},
-                                        {1, 0, 1, 0},
-                                        {0, 0, 0, 1}};
-        LevelData saveTest = new LevelData(saveName, lvl, diff, inventory, mapData);
-        logData(saveTest);      
-        //read data
-        System.out.println("LevelData read Test Start");
-        lvl = 0;
-        diff = 0;
-        inventory = new int[inventory.length];
-        mapData = new int[mapData.length][Array.getLength(mapData[0])];
-        System.out.println("Done Resetting Values For Test");
-        LevelData readTest = loadData(saveName);
-        
-        //print read data
-        System.out.println("READ RESULTS");
-        System.out.println("Name: "+saveName);
-        System.out.println("Level: "+readTest.lvl);
-        System.out.println("Difficulty: " + readTest.difficulty);
-        System.out.print("Inventory: {");
-            for(int val: readTest.inventory)
-            {
-                System.out.print(val+ " ");
-            }
-        System.out.println("}");
-        System.out.println("Level Data: ");
-            for(int row[]: readTest.mapData)
-            {
-                System.out.print("{");
-                for(int val: row)
-                {
-                    System.out.print(val + " ");
-                }
-                System.out.println("}");
-            }
-        
-        //System.out.println("LevelData: "+readTest.mapData);
-        
     }
     */
 }
