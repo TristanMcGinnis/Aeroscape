@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
@@ -28,6 +29,16 @@ public class LevelData {
     int inventory[] = new int[10];
     int mapData[][];
     
+    private ArrayList<Miner> miners;
+    FireControl FC;
+    
+     public void addMiner(Miner miner) {
+        miners.add(miner);
+    }
+
+    public ArrayList<Miner> getMiners() {
+        return miners;
+    }
     
     
     public Inventory getInventory()
