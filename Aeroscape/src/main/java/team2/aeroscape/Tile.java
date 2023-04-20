@@ -19,41 +19,22 @@ public class Tile {
     private Miner miner;
     private Smelter smelter;
     
-    public Tile() {
-}
-    
-    //Initialize tile with no building
-    //Tracks whether or not an individual tile has any resources or not; checked in Grid.generateResources()
-    private boolean resourcesGenerated;
-    
-    
-    private static BufferedImage ironTexture;
-    private static BufferedImage copperTexture;
-    private static BufferedImage goldTexture;
-    private static BufferedImage coalTexture;
-    private static BufferedImage grassTexture;
     private BufferedImage texture;
+    private TextureEngine textureEngine;
     
     static {
-        try {
-            Path ironPath = Paths.get("src/main/resources/textures/iron.png");
-            Path copperPath = Paths.get("src/main/resources/textures/copper.png");
-            Path goldPath = Paths.get("src/main/resources/textures/gold.png");
-            Path coalPath = Paths.get("src/main/resources/textures/coal.png");
-            Path grassPath = Paths.get("src/main/resources/textures/grass.png");
-
-            ironTexture = ImageIO.read(Files.newInputStream(ironPath));
-            copperTexture = ImageIO.read(Files.newInputStream(copperPath));
-            goldTexture = ImageIO.read(Files.newInputStream(goldPath));
-            coalTexture = ImageIO.read(Files.newInputStream(coalPath));
-            grassTexture = ImageIO.read(Files.newInputStream(grassPath));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // This will trigger the static block in TextureEngine, loading the textures
+        new TextureEngine();
     }
     
     
-    
+    public Tile() {
+}
+    //Initialize tile with no building
+    //Tracks whether or not an individual tile has any resources or not; checked in Grid.generateResources()
+    private boolean resourcesGenerated;
+   
+
     public Tile(int x, int y, boolean walkable) {
         this.x = x;
         this.y = y;
@@ -66,7 +47,7 @@ public class Tile {
         this.smelter = smelter;
         // Defaults hasResources to false on creation
         this.resourcesGenerated = false;
-        this.texture = grassTexture;
+        this.textureEngine = textureEngine;
         
     }
 
@@ -129,20 +110,17 @@ public class Tile {
     public void draw(Graphics2D g2d, int tileSize) {
         BufferedImage currentTexture = texture;
 
+
         if (resources[0] > 0) {
-            // Set iron texture
-            currentTexture = ironTexture;
+            currentTexture = TextureEngine.ironTexture;
         } else if (resources[1] > 0) {
-            // Set copper texture
-            currentTexture = copperTexture;
+            currentTexture = TextureEngine.copperTexture;
         } else if (resources[2] > 0) {
-            // Set gold texture
-            currentTexture = goldTexture;
+            currentTexture = TextureEngine.goldTexture;
         } else if (resources[3] > 0) {
-            // Set coal texture
-            currentTexture = coalTexture;
+            currentTexture = TextureEngine.coalTexture;
         } else {
-            currentTexture = grassTexture;
+            currentTexture = TextureEngine.grassTexture;
         }
 
         g2d.drawImage(currentTexture, x * tileSize, y * tileSize, tileSize, tileSize, null);

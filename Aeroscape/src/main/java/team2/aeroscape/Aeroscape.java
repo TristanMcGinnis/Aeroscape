@@ -38,7 +38,7 @@ public class Aeroscape {
     }
     
     public static void main(String[] args) {
-        MainMenu mainMenu = new MainMenu();
+        new MainMenu();
         System.out.println("Menu Initialized");
     }
     

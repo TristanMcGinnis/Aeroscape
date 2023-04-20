@@ -99,7 +99,7 @@ public class Miner extends Building {
         int screenY = (int) ((y - camera.getY()) * camera.getZoom());
 
         // Render the miner at the calculated on-screen position
-        g2d.drawImage(minerTexture, screenX, screenY, (int) (minerSize * camera.getZoom()), (int) (minerSize * camera.getZoom()), null);
+        g2d.drawImage(TextureEngine.minerTexture, screenX, screenY, (int) (minerSize * camera.getZoom()), (int) (minerSize * camera.getZoom()), null);
         
     }
         public BufferedImage getTexture() {
