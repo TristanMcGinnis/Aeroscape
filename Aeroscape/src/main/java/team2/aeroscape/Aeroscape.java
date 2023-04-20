@@ -8,19 +8,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Iterator;
-import javax.sound.sampled.FloatControl;
 /**
  * CS 321-01 TEAM 2
  * AEROSCAPE
@@ -35,6 +23,7 @@ public class Aeroscape {
     private GridRenderer gridRenderer;
     private Inventory inventory;
     private LevelData levelData;
+    private AudioEngine audioEngine;
     private boolean running;
     private boolean isZooming;
 
@@ -44,6 +33,7 @@ public class Aeroscape {
         camera = new Camera(0, 0, 1.0);
         inventory = new Inventory();
         levelData = new LevelData("defaultPlayer", 1, 0, new int[10], new int[100][100]);
+        audioEngine = new AudioEngine();
     }
     
     public Aeroscape(String playerName) {
@@ -51,7 +41,7 @@ public class Aeroscape {
         camera = new Camera(0, 0, 1.0);
         inventory = new Inventory();
         levelData = new LevelData(playerName, 1, 0, new int[10], new int[100][100]);
-        
+        audioEngine = new AudioEngine();
         System.out.println("Player name = " + playerName);
     }
     
@@ -68,7 +58,8 @@ public class Aeroscape {
         System.out.println("Init");
         gridRenderer = new GridRenderer(camera, player, levelData, inventory);
 
-        playBackgroundSong();
+        audioEngine.loadAudio("MainMusic", "src/main/resources/sfx/MainMusic.wav");
+        audioEngine.loopSound2D("MainMusic", -45.0f, Clip.LOOP_CONTINUOUSLY);
         JFrame frame = createGameWindow();
         addListeners(frame);
        
@@ -107,14 +98,13 @@ public class Aeroscape {
                 initializePositions();
             }
         });
-        /*
+
         frame.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
                 handleMouseWheel(e);
             }
         });
-        */
     }
 
     private void handleMouseWheel(MouseWheelEvent e) {
@@ -150,7 +140,6 @@ public class Aeroscape {
     */
 public void gameLoop() {
         System.out.println("Game Loop Initialized");
-        //final double updateTime = 1_000_000_000.0 / 60.0; // 60 updates per second
         final double updateTime = 1000/60; //60 Updates per second
         double lastUpdateTime = System.currentTimeMillis(); 
         double delta = 0;
@@ -166,14 +155,8 @@ public void gameLoop() {
             while (delta < updateTime) {
                 delta = System.currentTimeMillis() - lastUpdateTime;
             }
-
-//            while (delta >= 1) {
-//                update(delta); // Update game entities
-//                delta--;
-//            }
             render(); // Render the game entities
             //sync(); // Synchronize the game loop if needed
-            
         }
     }
 
@@ -202,9 +185,6 @@ public void gameLoop() {
         } catch (Exception NullPointerException) {
             System.out.println("Null Pointer");
         }
-        
-        //In theory shouldn't need this. gridRenderer should update all tiles or more effeciently only building types
-
         for (Miner miner : levelData.getMiners()) {
             miner.update();
         }      
@@ -236,33 +216,5 @@ public void gameLoop() {
         int screenWidth = gridRenderer.getWidth();
         int screenHeight = gridRenderer.getHeight();
         camera.follow(player.getX(), player.getY(), screenWidth, screenHeight);
-    }
-    
-    
-    private void playBackgroundSong() {
-        Path audioPath = Paths.get("src/main/resources/sfx/MainMusic.wav");
-        try {
-            URL audioURL = audioPath.toUri().toURL();
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioURL);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            float decibels = -45.0f; // Adjust this value to control the volume, negative values reduce the volume
-            gainControl.setValue(decibels);
-
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-        } catch (MalformedURLException e) {
-            System.err.println("Error: Invalid URL for the audio file.");
-            e.printStackTrace();
-        } catch (UnsupportedAudioFileException e) {
-            System.err.println("Error: Unsupported audio file format.");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.err.println("Error: Unable to read the audio file.");
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            System.err.println("Error: Audio line is unavailable.");
-            e.printStackTrace();
-        }
     }
 }
