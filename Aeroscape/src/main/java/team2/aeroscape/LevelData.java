@@ -30,7 +30,9 @@ public class LevelData {
     int mapData[][];
     ArrayList<Miner> miners;    //Not Persistent
     ArrayList<Smelter> smelters;    //Not Persistent
+    ArrayList<SAM_PLATFORM> samPlatforms; //Not Persistent
     FireControl FC;     //Not Persistent
+    EnemyHandler EH;    //Not Persistent
     
     /**
      * This constructor takes all relevant save information for logging/loading for persistence between sessions.
@@ -51,7 +53,9 @@ public class LevelData {
         this.mapData = new int[mapData.length][mapData[0].length];
         this.miners = new ArrayList<Miner>();   //Not Persistent
         this.smelters = new ArrayList<Smelter>();   //Not Persistent
+        this.samPlatforms = new ArrayList<SAM_PLATFORM>(); //Not Persistent
         this.FC = new FireControl();    //Not Persistent
+        this.EH = new EnemyHandler(difficulty, 1000); //Not Persistent
 
         this.mapData = mapData;
     }
@@ -112,6 +116,9 @@ public class LevelData {
     public void addSmelter(Smelter smelter) {
         smelters.add(smelter);
     }
+    public void addSamPlatform(SAM_PLATFORM samPlatform) {
+        samPlatforms.add(samPlatform);
+    }
 
     
     /**
@@ -126,6 +133,11 @@ public class LevelData {
     public ArrayList<Smelter> getSmelters() {
         return smelters;
     }
+    public ArrayList<SAM_PLATFORM> getSamPlatforms() {
+        return samPlatforms;
+    }
+    
+    
     
     /**
      * Converts a standard Java Array to a JSON array usable by SimpleJSON library
