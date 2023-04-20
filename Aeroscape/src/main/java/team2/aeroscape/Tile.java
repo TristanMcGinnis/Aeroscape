@@ -13,6 +13,7 @@ public class Tile {
     private int[] resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
     private Miner miner;
     private Smelter smelter;
+    private SAM_PLATFORM samPlatform;
     
     private BufferedImage texture;
     private TextureEngine textureEngine;
@@ -40,6 +41,7 @@ public class Tile {
         this.resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
         this.miner = miner;
         this.smelter = smelter;
+        this.samPlatform = samPlatform;
         // Defaults hasResources to false on creation
         this.resourcesGenerated = false;
         this.textureEngine = textureEngine;
@@ -154,5 +156,13 @@ public class Tile {
 
     public void setSmelter(Smelter smelter) {
         this.smelter = smelter;
+    }
+    
+    public SAM_PLATFORM getSamPlatform() {
+        return samPlatform;
+    }
+    
+    public void setSamPlatform(SAM_PLATFORM samPlatform) {
+        this.samPlatform = samPlatform;
     }
 }

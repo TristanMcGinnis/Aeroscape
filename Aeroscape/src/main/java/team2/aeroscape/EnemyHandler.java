@@ -9,17 +9,14 @@ package team2.aeroscape;
  * Class responsible for handling the spawning of enemies into the game space
  */
 public class EnemyHandler {
-    private long lastTime, startTime;
     private int difficulty;
     private Missile[] flyers;
-    private double[] worldSpace = new double[2];
+    private int meterScale;
     
     
-    public EnemyHandler(int difficulty, long time, int tilesX, int tilesY, int meterScale) {
+    public EnemyHandler(int difficulty, int squareMetersPerTile) {
         this.difficulty = difficulty;
-        this.startTime = time;  
-        this.lastTime = time;
-        this.worldSpace[0] = tilesX * meterScale; this.worldSpace[1] = tilesY * meterScale;
+        this.meterScale = squareMetersPerTile;
     }
     
     /*
