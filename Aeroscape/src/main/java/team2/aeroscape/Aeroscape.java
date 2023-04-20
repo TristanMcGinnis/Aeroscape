@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import javax.sound.sampled.Clip;
+import javax.swing.SwingUtilities;
 /**
  * CS 321-01 TEAM 2
  * AEROSCAPE
@@ -24,6 +25,7 @@ public class Aeroscape {
     private Inventory inventory;
     private LevelData levelData;
     private AudioEngine audioEngine;
+    private InputManager inputManager;
     private boolean running;
     private boolean isZooming;
 
@@ -34,7 +36,9 @@ public class Aeroscape {
         inventory = new Inventory();
         levelData = new LevelData(playerName, 1, 0, new int[10], new int[100][100]);
         audioEngine = new AudioEngine();
+        inputManager = new InputManager();
         System.out.println("Player name = " + playerName);
+        running = true;
     }
     
     public static void main(String[] args) {
@@ -53,9 +57,6 @@ public class Aeroscape {
         audioEngine.loopSound2D("MainMusic", -45.0f, Clip.LOOP_CONTINUOUSLY);
         JFrame frame = createGameWindow();
         addListeners(frame);
-       
-
-        running = true;
         new Thread(this::gameLoop).start();
     }
     
@@ -71,18 +72,7 @@ public class Aeroscape {
     }
 
     private void addListeners(JFrame frame) {
-        frame.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                gridRenderer.handleKeyPress(e);
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                gridRenderer.handleKeyPress(e);
-            }
-        });
-        
+        frame.addKeyListener(inputManager);
         gridRenderer.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -146,7 +136,9 @@ public void gameLoop() {
             while (delta < updateTime) {
                 delta = System.currentTimeMillis() - lastUpdateTime;
             }
-            render(); // Render the game entities
+            SwingUtilities.invokeLater(() -> {
+                render();
+            });
             //sync(); // Synchronize the game loop if needed
         }
     }
@@ -157,6 +149,27 @@ public void gameLoop() {
         try {
             int screenWidth = gridRenderer.getScreenWidth();
             int screenHeight = gridRenderer.getScreenHeight();
+          
+            int step = (int) (5 + camera.getZoom());
+
+            if (inputManager.isUp()) {
+                player.setVelY(-step);
+            } else if (inputManager.isDown()) {
+                player.setVelY(step);
+            } else {
+                player.stopY();
+            }
+
+            if (inputManager.isLeft()) {
+                player.setVelX(-step);
+            } else if (inputManager.isRight()) {
+                player.setVelX(step);
+            } else {
+                player.stopX();
+            }
+            
+            
+            
 
             player.update();
 
