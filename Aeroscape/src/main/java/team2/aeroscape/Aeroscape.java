@@ -29,7 +29,7 @@ public class Aeroscape {
 
 
     public Aeroscape(String playerName) {
-        player = new Player(300, 300);
+        player = new Player(3000, 3000);
         camera = new Camera(0, 0, 1.5);
         inventory = new Inventory();
         levelData = new LevelData(playerName, 1, 0, new int[10], new int[100][100]);

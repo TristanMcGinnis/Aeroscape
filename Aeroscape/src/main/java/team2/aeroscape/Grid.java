@@ -53,12 +53,22 @@ public class Grid {
     }
      
     public void drawGrid(Graphics2D g2d, int screenWidth, int screenHeight) {
-        for (int i = 0; i < tiles.length; i++) {
-            for (int j = 0; j < tiles[i].length; j++) {
+        // Get the range of tile indices in the frame of the camera
+        int[] topLeftIndex = camera.getTileIndex(0, 0, gridSize);
+        int[] bottomRightIndex = camera.getTileIndex(screenWidth, screenHeight, gridSize);
+        int minI = Math.max(topLeftIndex[0], 0);
+        int maxI = Math.min(bottomRightIndex[0], tiles.length - 1);
+        int minJ = Math.max(topLeftIndex[1], 0);
+        int maxJ = Math.min(bottomRightIndex[1], tiles[0].length - 1);
+
+        // Iterate through the relevant tiles only
+        for (int i = minI; i <= maxI; i++) {
+            for (int j = minJ; j <= maxJ; j++) {
                 tiles[i][j].draw(g2d, gridSize);
             }
         }
     }
+
     
     public Tile getTile(int x, int y) {
         if (x < 0 || y < 0 || x >= tiles.length || y >= tiles[x].length) {
