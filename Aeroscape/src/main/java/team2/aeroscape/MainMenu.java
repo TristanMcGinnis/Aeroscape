@@ -155,21 +155,8 @@ public final class MainMenu extends JFrame {
         add(nameButton);
       
         nameButton.addActionListener((ActionEvent e) -> {
-            
-            //This function is almost entirely pulled from the original new game button's code, except it puts a playerName into Aeroscape
-            // Add code to load the game here
-            System.out.println("getting name");
-            
-            //Grabs the name from the nameEnter text field
-
             String name = nameEnter.getText();
-            
-            System.out.println("Creating new game...");
-            SwingUtilities.invokeLater(() -> {
-                Aeroscape initialize = new Aeroscape(name);
-                initialize.init();
-            });
-            dispose();
+            selectMapSize(name);
         });
       
     }
@@ -222,4 +209,45 @@ public final class MainMenu extends JFrame {
         });
       
     }
-}
+    
+    
+    private void selectMapSize(String playerName) {
+            String[] options = {"Small (50x50)", "Medium (100x100)", "Large (500x500)", "Huge (1000x1000)"};
+            int selection = JOptionPane.showOptionDialog(
+                    this,
+                    "Please select a map size:",
+                    "Select Map Size",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    options,
+                    options[0]
+            );
+
+            int gridWidth, gridHeight;
+            switch (selection) {
+                case 0:
+                    gridWidth = gridHeight = 50;
+                    break;
+                case 1:
+                    gridWidth = gridHeight = 100;
+                    break;
+                case 2:
+                    gridWidth = gridHeight = 500;
+                    break;
+                case 3:
+                    gridWidth = gridHeight = 1000;
+                    break;
+                default:
+                    return;
+            }
+
+            System.out.println("Creating new game...");
+            SwingUtilities.invokeLater(() -> {
+                Aeroscape initialize = new Aeroscape(playerName, gridWidth, gridHeight);
+                initialize.init();
+            });
+            dispose();
+        }
+    }
+

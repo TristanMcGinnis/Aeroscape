@@ -21,8 +21,7 @@ public class GridRenderer extends JPanel {
     // Initialize constants
     private static final int PLAYER_SIZE = 40;
     private static final int TILE_SIZE = 50;
-    private static final int GRID_WIDTH = 100;
-    private static final int GRID_HEIGHT = 100;
+
     
     
     private final Camera camera;
@@ -33,6 +32,9 @@ public class GridRenderer extends JPanel {
     private int screenWidth;
     private int screenHeight;
     private TextureEngine textureEngine;
+    
+    private int GRID_WIDTH;
+    private int GRID_HEIGHT;
     
     static {
         new TextureEngine();
@@ -45,11 +47,13 @@ public class GridRenderer extends JPanel {
     /**
      * Constructs a new `GridRenderer` object with the specified `Camera`, `Player`, and `LevelData`.
      */
-    public GridRenderer(Camera camera, Player player, LevelData levelData, Inventory inventory) {
+    public GridRenderer(Camera camera, Player player, LevelData levelData, Inventory inventory, int gridWidth, int gridHeight) {
         this.camera = camera;
         this.player = player;
         this.levelData = levelData;
         this.inventory = inventory;
+        this.GRID_WIDTH = gridWidth;
+        this.GRID_HEIGHT = gridHeight;
         this.grid = new Grid(TILE_SIZE, camera, GRID_WIDTH, GRID_HEIGHT);
         this.screenWidth = 1920;
         this.screenHeight = 1080;
