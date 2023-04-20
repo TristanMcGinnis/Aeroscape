@@ -67,13 +67,6 @@ public class GridRenderer extends JPanel {
         this.screenHeight = 1080;
         
         setPreferredSize(new Dimension(screenWidth, screenHeight));
-        
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                handleMouseClick(e);
-            }
-        });
     }
     
     /**
@@ -173,52 +166,14 @@ public class GridRenderer extends JPanel {
     }
 
     
-    
-    /**
-     * Handles key presses by updating the player's velocity and repainting the panel.
-     */
-    public void handleKeyPress(KeyEvent e) {
-        int key = e.getKeyCode();
-        int step = (int) (5 + camera.getZoom());
-
-        if (e.getID() == KeyEvent.KEY_PRESSED)
-        {
-            switch (key) {
-                case KeyEvent.VK_W:
-                    player.setVelY(-step);
-                    break;
-                case KeyEvent.VK_A:
-                    player.setVelX(-step);
-                    break;
-                case KeyEvent.VK_S:
-                    player.setVelY(step);
-                    break;
-                case KeyEvent.VK_D:
-                    player.setVelX(step);
-                    break;
-            }
-        } else if (e.getID() == KeyEvent.KEY_RELEASED) {
-            switch (key) {
-                case KeyEvent.VK_W:
-                case KeyEvent.VK_S:
-                    player.stopY();
-                    break;
-                case KeyEvent.VK_A:
-                case KeyEvent.VK_D:
-                    player.stopX();
-                    break;
-            }
-        }
-        repaint();
-    }
-    
-    public void handleMouseClick(MouseEvent e) {
+   
+    public void handleMinerPlacement(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
 
         // Convert screen coordinates to world coordinates
         int worldX = (int) ((x + camera.getX()) / camera.getZoom());
-        int worldY = (int) ((y + camera.getY()) / camera.getZoom());
+        int worldY = (int) ((y + camera.getY()) / camera.getZoom() - 25);
 
         // Snap to the grid
         int gridX = (worldX / GRID_SIZE) * GRID_SIZE;

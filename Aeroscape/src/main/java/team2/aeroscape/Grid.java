@@ -6,11 +6,7 @@ import java.util.Random;
 public class Grid {
 
     private int gridSize;
-
-
     private Camera camera;
-
-
     private Tile[][] tiles;
     
 

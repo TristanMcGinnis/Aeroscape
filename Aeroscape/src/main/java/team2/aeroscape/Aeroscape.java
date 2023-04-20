@@ -3,24 +3,9 @@ package team2.aeroscape;
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Iterator;
-import javax.sound.sampled.FloatControl;
+import javax.swing.SwingUtilities;
 /**
  * CS 321-01 TEAM 2
  * AEROSCAPE
@@ -35,29 +20,28 @@ public class Aeroscape {
     private GridRenderer gridRenderer;
     private Inventory inventory;
     private LevelData levelData;
+    private AudioEngine audioEngine;
+    private KeyboardInputManager keyboardManager;
+    private MouseInputManager mouseManager;
     private boolean running;
     private boolean isZooming;
 
-    
-    public Aeroscape() {
-        player = new Player(300, 300);
-        camera = new Camera(0, 0, 1.0);
-        inventory = new Inventory();
-        levelData = new LevelData("defaultPlayer", 1, 0, new int[10], new int[100][100]);
-    }
-    
+
     public Aeroscape(String playerName) {
         player = new Player(300, 300);
-        camera = new Camera(0, 0, 1.0);
+        camera = new Camera(0, 0, 1.5);
         inventory = new Inventory();
         levelData = new LevelData(playerName, 1, 0, new int[10], new int[100][100]);
-        
+        gridRenderer = new GridRenderer(camera, player, levelData, inventory);
+        audioEngine = new AudioEngine();
+        keyboardManager = new KeyboardInputManager();
+        mouseManager = new MouseInputManager(gridRenderer);
         System.out.println("Player name = " + playerName);
+        running = true;
     }
     
     public static void main(String[] args) {
-        Aeroscape aeroscape = new Aeroscape();
-        MainMenu mainMenu = new MainMenu();
+        new MainMenu();
         System.out.println("Menu Initialized");
     }
     
@@ -66,14 +50,11 @@ public class Aeroscape {
     public void init() {
         // Initialize game entities and other settings here
         System.out.println("Init");
-        gridRenderer = new GridRenderer(camera, player, levelData, inventory);
 
-        playBackgroundSong();
+        audioEngine.loadAudio("MainMusic", "src/main/resources/sfx/MainMusic.wav");
+        audioEngine.loopSound2D("MainMusic", -45.0f, Clip.LOOP_CONTINUOUSLY);
         JFrame frame = createGameWindow();
         addListeners(frame);
-       
-
-        running = true;
         new Thread(this::gameLoop).start();
     }
     
@@ -89,42 +70,14 @@ public class Aeroscape {
     }
 
     private void addListeners(JFrame frame) {
-        frame.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                gridRenderer.handleKeyPress(e);
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                gridRenderer.handleKeyPress(e);
-            }
-        });
-        
+        frame.addKeyListener(keyboardManager);
+        frame.addMouseListener(mouseManager);
         gridRenderer.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 initializePositions();
             }
         });
-        /*
-        frame.addMouseWheelListener(new MouseWheelListener() {
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                handleMouseWheel(e);
-            }
-        });
-        */
-    }
-
-    private void handleMouseWheel(MouseWheelEvent e) {
-        double zoomFactor = 0.1;
-        if (e.getWheelRotation() < 0) {
-            camera.setZoom(Math.min(camera.getZoom() + zoomFactor, 3.0));
-        } else {
-            camera.setZoom(Math.max(camera.getZoom() - zoomFactor, 0.2));
-        }
-
         updateCameraPosition();
 
         gridRenderer.repaint();
@@ -150,7 +103,6 @@ public class Aeroscape {
     */
 public void gameLoop() {
         System.out.println("Game Loop Initialized");
-        //final double updateTime = 1_000_000_000.0 / 60.0; // 60 updates per second
         final double updateTime = 1000/60; //60 Updates per second
         double lastUpdateTime = System.currentTimeMillis(); 
         double delta = 0;
@@ -166,14 +118,10 @@ public void gameLoop() {
             while (delta < updateTime) {
                 delta = System.currentTimeMillis() - lastUpdateTime;
             }
-
-//            while (delta >= 1) {
-//                update(delta); // Update game entities
-//                delta--;
-//            }
-            render(); // Render the game entities
+            SwingUtilities.invokeLater(() -> {
+                render();
+            });
             //sync(); // Synchronize the game loop if needed
-            
         }
     }
 
@@ -183,6 +131,27 @@ public void gameLoop() {
         try {
             int screenWidth = gridRenderer.getScreenWidth();
             int screenHeight = gridRenderer.getScreenHeight();
+          
+            int step = (int) (5 + camera.getZoom());
+
+            if (keyboardManager.isUp()) {
+                player.setVelY(-step);
+            } else if (keyboardManager.isDown()) {
+                player.setVelY(step);
+            } else {
+                player.stopY();
+            }
+
+            if (keyboardManager.isLeft()) {
+                player.setVelX(-step);
+            } else if (keyboardManager.isRight()) {
+                player.setVelX(step);
+            } else {
+                player.stopX();
+            }
+            
+            
+            
 
             player.update();
 
@@ -199,12 +168,11 @@ public void gameLoop() {
             camera.setX((int) newX);
             camera.setY((int) newY);
 
+            mouseManager.mouseClicked();
+            
         } catch (Exception NullPointerException) {
             System.out.println("Null Pointer");
         }
-        
-        //In theory shouldn't need this. gridRenderer should update all tiles or more effeciently only building types
-
         for (Miner miner : levelData.getMiners()) {
             miner.update();
         }      
@@ -236,33 +204,5 @@ public void gameLoop() {
         int screenWidth = gridRenderer.getWidth();
         int screenHeight = gridRenderer.getHeight();
         camera.follow(player.getX(), player.getY(), screenWidth, screenHeight);
-    }
-    
-    
-    private void playBackgroundSong() {
-        Path audioPath = Paths.get("src/main/resources/sfx/MainMusic.wav");
-        try {
-            URL audioURL = audioPath.toUri().toURL();
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioURL);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            float decibels = -45.0f; // Adjust this value to control the volume, negative values reduce the volume
-            gainControl.setValue(decibels);
-
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-        } catch (MalformedURLException e) {
-            System.err.println("Error: Invalid URL for the audio file.");
-            e.printStackTrace();
-        } catch (UnsupportedAudioFileException e) {
-            System.err.println("Error: Unsupported audio file format.");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.err.println("Error: Unable to read the audio file.");
-            e.printStackTrace();
-        } catch (LineUnavailableException e) {
-            System.err.println("Error: Audio line is unavailable.");
-            e.printStackTrace();
-        }
     }
 }
