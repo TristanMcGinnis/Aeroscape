@@ -18,7 +18,6 @@ public class Tile {
     private TextureEngine textureEngine;
     
     static {
-        // This will trigger the static block in TextureEngine, loading the textures
         new TextureEngine();
     }
     
@@ -34,7 +33,6 @@ public class Tile {
         this.x = x;
         this.y = y;
         this.walkable = walkable;
-     
         
         this.gameObjects = new ArrayList<>();
         this.resources = new int[4]; // 0: iron, 1: copper, 2: gold, 3: coal
@@ -103,9 +101,9 @@ public class Tile {
 
     
     public void draw(Graphics2D g2d, int tileSize) {
+        
         BufferedImage currentTexture = texture;
-
-
+        
         if (resources[0] > 0) {
             currentTexture = TextureEngine.ironTexture;
         } else if (resources[1] > 0) {
@@ -114,9 +112,9 @@ public class Tile {
             currentTexture = TextureEngine.goldTexture;
         } else if (resources[3] > 0) {
             currentTexture = TextureEngine.coalTexture;
-        } else {
+        } else
             currentTexture = TextureEngine.grassTexture;
-        }
+        
 
         g2d.drawImage(currentTexture, x * tileSize, y * tileSize, tileSize, tileSize, null);
 
@@ -154,5 +152,5 @@ public class Tile {
 
     public void setSmelter(Smelter smelter) {
         this.smelter = smelter;
-    }
+    }  
 }

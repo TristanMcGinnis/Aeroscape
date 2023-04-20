@@ -10,7 +10,6 @@ import java.awt.Rectangle;
 import java.awt.TexturePaint;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 /**
@@ -20,11 +19,12 @@ import javax.swing.JPanel;
 public class GridRenderer extends JPanel {
     
     // Initialize constants
-    private static final int CIRCLE_RADIUS = 40;
-    private static final int GRID_SIZE = 50;
-    private static BufferedImage playerTexture;
-    private static ImageIcon waterTexture;
-    // Declare instance variables
+    private static final int PLAYER_SIZE = 40;
+    private static final int TILE_SIZE = 50;
+    private static final int GRID_WIDTH = 100;
+    private static final int GRID_HEIGHT = 100;
+    
+    
     private final Camera camera;
     private final Player player;
     private final LevelData levelData;
@@ -50,7 +50,7 @@ public class GridRenderer extends JPanel {
         this.player = player;
         this.levelData = levelData;
         this.inventory = inventory;
-        this.grid = new Grid(GRID_SIZE, camera, 100, 100);
+        this.grid = new Grid(TILE_SIZE, camera, GRID_WIDTH, GRID_HEIGHT);
         this.screenWidth = 1920;
         this.screenHeight = 1080;
         this.textureEngine = textureEngine;
@@ -105,7 +105,7 @@ public class GridRenderer extends JPanel {
         // Calculate the location of the rectangle that defines the region where the texture will be painted
         int waterX = -(camera.getX() % waterImage.getWidth(null));
         int waterY = -(camera.getY() % waterImage.getHeight(null));
-        Rectangle waterRect = new Rectangle(waterX, waterY, 128, 128);
+        Rectangle waterRect = new Rectangle(waterX, waterY, 150, 150);
 
         // Create a TexturePaint object using the water image and the rectangle
         TexturePaint waterPaint = new TexturePaint(waterBufferedImage, waterRect);
@@ -130,9 +130,9 @@ public class GridRenderer extends JPanel {
      * Draws the player's circle on the panel using the specified `Graphics2D` object.
      */
     private void drawPlayer(Graphics2D g2d) {
-        int x = player.getX() - CIRCLE_RADIUS;
-        int y = player.getY() - CIRCLE_RADIUS;
-        g2d.drawImage(textureEngine.playerTexture, x, y, 2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS, null);
+        int x = player.getX() - PLAYER_SIZE;
+        int y = player.getY() - PLAYER_SIZE;
+        g2d.drawImage(textureEngine.playerTexture, x, y, 2 * PLAYER_SIZE, 2 * PLAYER_SIZE, null);
     }
     
     private void drawResources(Graphics2D g2d) {
@@ -168,12 +168,12 @@ public class GridRenderer extends JPanel {
         int worldY = (int) ((y + camera.getY()) / camera.getZoom() - 25);
 
         // Snap to the grid
-        int gridX = (worldX / GRID_SIZE) * GRID_SIZE;
-        int gridY = (worldY / GRID_SIZE) * GRID_SIZE;
+        int gridX = (worldX / TILE_SIZE) * TILE_SIZE;
+        int gridY = (worldY / TILE_SIZE) * TILE_SIZE;
 
         System.out.println("World X: " + worldX + ", World Y: " + worldY);
 
-        Tile tile = grid.getTile(gridX / GRID_SIZE, gridY / GRID_SIZE);
+        Tile tile = grid.getTile(gridX / TILE_SIZE, gridY / TILE_SIZE);
 
         if (tile != null) {
             placer.place(tile, inventory);

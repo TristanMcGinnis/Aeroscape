@@ -18,7 +18,7 @@ public class TextureEngine {
     public static BufferedImage smelterTexture;
     public static ImageIcon waterTexture;
     public static BufferedImage playerTexture;
-    
+    public static BufferedImage waterStaticTexture;
     static {
         loadTextures();
     }
@@ -34,7 +34,7 @@ public class TextureEngine {
             Path smelterPath = Paths.get("src/main/resources/textures/smelter.png");
             Path playerPath = Paths.get("src/main/resources/textures/player.png");
             Path waterPath = Paths.get("src/main/resources/textures/water.gif");
-
+            Path waterStaticPath = Paths.get("src/main/resources/textures/waterStatic.png");
             
             
             ironTexture = ImageIO.read(Files.newInputStream(ironPath));
@@ -46,7 +46,7 @@ public class TextureEngine {
             smelterTexture = ImageIO.read(Files.newInputStream(smelterPath));
             playerTexture = ImageIO.read(Files.newInputStream(playerPath));
             waterTexture = new ImageIcon(waterPath.toString());
-            
+            waterStaticTexture = ImageIO.read(Files.newInputStream(waterStaticPath));
             
         } catch (IOException e) {
             e.printStackTrace();

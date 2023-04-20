@@ -95,4 +95,10 @@ public class Camera {
     public static double lerp(double a, double b, double t) {
         return a + (b - a) * t;
     }
+    
+    public int[] getTileIndex(int screenX, int screenY, int tileSize) {
+        int tileX = (int) Math.floor((screenX + x) / (tileSize * zoom));
+        int tileY = (int) Math.floor((screenY + y) / (tileSize * zoom));
+        return new int[] { tileX, tileY };
+    }
 }
