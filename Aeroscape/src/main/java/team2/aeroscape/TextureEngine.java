@@ -8,6 +8,12 @@ import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+
+/**
+A utility class for loading and accessing textures used in the game.
+Textures are loaded from image files located in the "textures" directory in the resource folder.
+Contains static variables for each texture loaded, which can be accessed directly by other classes.
+*/
 public class TextureEngine {
     public static BufferedImage ironTexture;
     public static BufferedImage copperTexture;
@@ -27,6 +33,10 @@ public class TextureEngine {
         loadTextures();
     }
 
+    /**
+    * Loads all the textures used in the game from image files located in the "textures" directory in the resource folder.
+    * Static variables for each texture are set to the loaded images.
+    */
     private static void loadTextures() {
         try {
             Path ironPath = Paths.get("src/main/resources/textures/iron.png");

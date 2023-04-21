@@ -1,5 +1,6 @@
 package team2.aeroscape;
 
+
 /**
  * The `Player` class represents a player in the game. It has `x` and `y` coordinates that represent the
  * player's position, as well as `velX` and `velY` velocities that determine the player's movement speed.
@@ -11,7 +12,9 @@ public class Player {
     private int velY;
 
     /**
-     * Constructs a new `Player` object with the specified position.
+     * Constructs a new 'Player' object with the specified position.
+     * @param x The x coordinate of the player.
+     * @param y The y coordinate of the player.
      */
     public Player(int x, int y) {
         this.x = x;
@@ -22,6 +25,7 @@ public class Player {
 
     /**
      * Returns the current X coordinate of the player.
+     * @return the current X coordinate of the player.
      */
     public int getX() {
         return x;
@@ -29,6 +33,7 @@ public class Player {
 
     /**
      * Returns the current Y coordinate of the player.
+     * @return the current Y coordinate of the player.
      */
     public int getY() {
         return y;
@@ -36,6 +41,7 @@ public class Player {
 
     /**
      * Returns the current X velocity of the player.
+     * @return the current X velocity of the player.
      */
     public int getVelX() {
         return velX;
@@ -43,6 +49,7 @@ public class Player {
 
     /**
      * Returns the current Y velocity of the player.
+     * @return the current Y velocity of the player.
      */
     public int getVelY() {
         return velY;
@@ -50,6 +57,7 @@ public class Player {
 
     /**
      * Sets the X coordinate of the player.
+     * @param x the X coordinate of the player.
      */
     public void setX(int x) {
         this.x = x;
@@ -57,6 +65,7 @@ public class Player {
 
     /**
      * Sets the Y coordinate of the player.
+     * @param y the Y coordinate of the player.
      */
     public void setY(int y) {
         this.y = y;
@@ -64,6 +73,7 @@ public class Player {
 
     /**
      * Sets the X velocity of the player.
+     * @param velX the X velocity of the player.
      */
     public void setVelX(int velX) {
         this.velX = velX;
@@ -71,6 +81,7 @@ public class Player {
 
     /**
      * Sets the Y velocity of the player.
+     * @param velY the Y velocity of the player.
      */
     public void setVelY(int velY) {
         this.velY = velY;

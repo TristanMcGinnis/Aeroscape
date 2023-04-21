@@ -1,6 +1,9 @@
 package team2.aeroscape;
 
 
+/**
+The Smelter class represents a smelting building in the game.
+*/
 public class Smelter extends Building {
     
     private int smeltSpeed = 1;
@@ -8,13 +11,25 @@ public class Smelter extends Building {
     private long smeltingInterval = 5000; // Set the idle time between smelting actions in milliseconds
     private Inventory inventory;
     
-    
+    /**
+    Creates a new Smelter with the specified inventory and Tile position.
+    @param inventory the inventory of the player.
+    @param tile the Tile position of the Smelter.
+    */
     public Smelter(Inventory inventory, Tile tile) {
         super(50, 50, tile); // Set the width and height of the Miner building
         this.inventory = inventory;
     }
     
     
+    /**
+    This method is called to update the state of the Smelter building.
+    It checks if enough time has passed since the last smelting action,
+    then checks if the player has the resources needed. If coal is available, it goes
+    through the first 3 resources (raw iron, copper and gold) and removes some amount
+    of the resource from the inventory and adds the smelted version of the resource to the inventory.
+    If any resources were smelted, it decreases the coal count by 1 and updates the last smelting time.
+    */
     @Override
     public void update() {
 

@@ -1,16 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package team2.aeroscape;
-/**
- *
- * @author nndcp
- */
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+The MainMenu class represents the main menu of the game.
+It extends the JFrame class and implements the ActionListener interface.
+This class contains buttons for starting a new game, loading a saved game, displaying options, and quitting the game.
+It also contains functionality to request the player's name when starting a new game or loading a saved game.
+Finally, it contains functionality for selecting the map size when starting a new game.
+*/
 public final class MainMenu extends JFrame {
     
     private JButton newGameButton;
@@ -23,6 +23,11 @@ public final class MainMenu extends JFrame {
     private JTextField nameEnter;
     private JButton nameButton;
     
+    
+    /**
+    * Constructor for the MainMenu class.
+    * Initializes the JFrame and its components, sets their behavior and positions them on the window.
+    */
     public MainMenu() {
         // Set the window title
         setTitle("Aeroscape Launcher");
@@ -90,6 +95,10 @@ public final class MainMenu extends JFrame {
         setVisible(true);
     }
     
+    
+    /**
+    * Positions the buttons vertically and horizontally on the window.
+    */
     public void positionBtns() {
         // Set the alignment for the buttons
         Dimension dims = this.size();
@@ -120,6 +129,10 @@ public final class MainMenu extends JFrame {
         add(quitButton);
     }
     
+    
+    /**
+    Request the player name for a new game.
+    */
     private void RequestPlayerNameNew(){
         
         this.remove(newGameButton);
@@ -161,6 +174,10 @@ public final class MainMenu extends JFrame {
       
     }
     
+    
+    /**
+    Request the player name to load a saved game.
+    */
     private void RequestPlayerNameLoad(){
         
         this.remove(loadGameButton);
@@ -210,7 +227,9 @@ public final class MainMenu extends JFrame {
       
     }
     
-    
+    /**
+    Requests input from the player to select the map size
+    */
     private void selectMapSize(String playerName) {
             String[] options = {"Small (50x50)", "Medium (100x100)", "Large (500x500)", "Huge (1000x1000)"};
             int selection = JOptionPane.showOptionDialog(

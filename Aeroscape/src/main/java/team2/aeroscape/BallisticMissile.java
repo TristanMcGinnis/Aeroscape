@@ -1,11 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package team2.aeroscape;
 
+
 /**
- *
  * Ballistic Missile Class.
  * Type of missile used by enemy platforms
  */
@@ -20,12 +16,13 @@ public class BallisticMissile extends Missile {
     }
     
     
-    /*
+    /**
     Update method for an enemy ballistic missile(Missile with a nonmoving ground target).
     Checks if within hit tolerance of target and checks if timeout has been hit
     Updates position in realspace.
     Returns false when condition is met
     Returns true when missile is still active
+    * @return Returns false if the missile gets a kill and true if it does not.
     */
     protected boolean update() {
         long currTime = System.currentTimeMillis();

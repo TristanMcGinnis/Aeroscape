@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package team2.aeroscape;
 
 import java.util.ArrayList;
@@ -9,40 +5,42 @@ import java.util.List;
 import java.util.Iterator;
 
 /**
- *
- * @author nndcp
- */
+The FireControl class provides a means for managing Surface-to-Air Missiles (SAMs).
+It handles adding, updating, and removing SAMs from an active list.
+*/
 public class FireControl {
-    //This should be initialized and possibly ran on its on thread
+    
     private static List<SAM> sams;
     
-    
-    /*
-    Initialize FireControl to have an empty list of SAM's
-    */
+    /**
+     * Constructor for the FireControl class.
+     * Initializes an empty list to hold active SAMs.
+     */
     public FireControl() {
         sams = new ArrayList<>();
     }
     
     
-    /*
-    Add a SAM to FC handled active sam list.
-    */
+    /**
+     * Adds a SAM to the active list.
+     *
+     * @param sam - The SAM to add.
+     */
     public void addSam(SAM sam) {
         sams.add(sam);
     }
     
     
-    /*
-    Check every SAM in the list and update there positions.
-    Delete SAM if no longer active
-    */
+    /**
+     * Checks every SAM in the list and updates their positions.
+     * Deletes the SAM from the list if it is no longer active.
+     * See SAM.update() for more information.
+     */
     public void update() {
         Iterator<SAM> iter = sams.iterator();
         while(iter.hasNext()) {
             SAM sam = iter.next();
             if(!sam.update()) iter.remove(); //Sam deleted once no longer active
-            //See SAM.update() for more info
         }
     }
 }

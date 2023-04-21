@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 
-
+/**
+This class represents a Miner building in the game. A Miner is a type of Building that mines resources from a Tile and adds them to an Inventory.
+*/
 public class Miner extends Building {
     private int miningSpeed = 1;
     private long lastMiningTime = 0; // Store the time of the last mining action
@@ -14,7 +16,11 @@ public class Miner extends Building {
 
     private static BufferedImage minerTexture;
     
-    
+    /**
+    Creates a new Miner with the specified Inventory and Tile.
+    @param inventory the Inventory that the Miner adds mined resources to.
+    @param tile the Tile that the Miner mines resources from.
+    */
     public Miner(Inventory inventory, Tile tile) {
         super(50, 50, tile); // Set the width and height of the Miner building
         color = new Color(0,0,255);
@@ -29,6 +35,10 @@ public class Miner extends Building {
         new TextureEngine();
     }
     
+    
+    /**
+    Updates the Miner's state by checking if enough time has passed since the last mining action and performing a mining action if possible.
+    */
     @Override
     public void update() {
         if (tile != null) {
@@ -79,6 +89,11 @@ public class Miner extends Building {
         }
     }
 
+    
+    /**
+    Returns the texture of the Miner.
+    @return the texture of the Miner.
+    */
     public BufferedImage getTexture() {
         return minerTexture;
     }   
