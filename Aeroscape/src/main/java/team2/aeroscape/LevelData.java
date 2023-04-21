@@ -31,6 +31,7 @@ public class LevelData {
     
     private ArrayList<Miner> miners;
     private ArrayList<Smelter> smelters;
+    private ArrayList<SAM_PLATFORM> samPlatforms;
     FireControl FC;
     
     public void addMiner(Miner miner) {
@@ -41,12 +42,20 @@ public class LevelData {
         return miners;
     }
     
-     public void addSmelter(Smelter smelter) {
+    public void addSmelter(Smelter smelter) {
         smelters.add(smelter);
     }
 
     public ArrayList<Smelter> getSmelters() {
         return smelters;
+    }
+    
+    public void addSamPlatform(SAM_PLATFORM samPlatform) {
+        samPlatforms.add(samPlatform);
+    }
+
+    public ArrayList<SAM_PLATFORM> getSamPlatforms() {
+        return samPlatforms;
     }
     
     
