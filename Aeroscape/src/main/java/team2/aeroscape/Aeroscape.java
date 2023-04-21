@@ -187,6 +187,7 @@ public void gameLoop() {
         } catch (Exception NullPointerException) {
             System.out.println("Null Pointer");
         }
+        
         for (Miner miner : levelData.getMiners()) {
             miner.update();
         }      
@@ -195,7 +196,7 @@ public void gameLoop() {
             smelter.update();
         }
         
-        levelData.FC.update();
+        //levelData.FC.update();
         //levelData.EH.update();
         
     }

@@ -88,7 +88,9 @@ public class LevelData {
      */ 
     public LevelData()
     {
-        
+        this.miners = new ArrayList<Miner>();  
+        this.smelters = new ArrayList<Smelter>(); 
+        this.samPlatforms = new ArrayList<SAM_PLATFORM>();
     }
     
     
