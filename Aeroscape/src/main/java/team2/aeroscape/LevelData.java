@@ -30,14 +30,23 @@ public class LevelData {
     int mapData[][];
     
     private ArrayList<Miner> miners;
+    private ArrayList<Smelter> smelters;
     FireControl FC;
     
-     public void addMiner(Miner miner) {
+    public void addMiner(Miner miner) {
         miners.add(miner);
     }
 
     public ArrayList<Miner> getMiners() {
         return miners;
+    }
+    
+     public void addSmelter(Smelter smelter) {
+        smelters.add(smelter);
+    }
+
+    public ArrayList<Smelter> getSmelters() {
+        return smelters;
     }
     
     
