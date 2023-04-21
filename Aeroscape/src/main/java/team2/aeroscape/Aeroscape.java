@@ -34,7 +34,8 @@ public class Aeroscape {
         player = new Player(playerStartX, playerStartY);
         camera = new Camera(0, 0, 1.5);
         inventory = new Inventory();
-        levelData = new LevelData(playerName, 1, 0, new int[10], new int[100][100]);
+        levelData = new LevelData();
+        //levelData = new LevelData(playerName,inventory, );
         gridRenderer = new GridRenderer(camera, player, levelData, inventory, gridWidth, gridHeight);
         audioEngine = new AudioEngine();
         keyboardManager = new KeyboardInputManager();
@@ -195,7 +196,7 @@ public void gameLoop() {
         }
         
         levelData.FC.update();
-        levelData.EH.update();
+        //levelData.EH.update();
         
     }
 

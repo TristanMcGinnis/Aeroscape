@@ -83,6 +83,16 @@ public class LevelData {
     }
     
     /**
+     * Default constructor for LevelData
+     * 
+     */ 
+    public LevelData()
+    {
+        
+    }
+    
+    
+    /**
      * This constructor takes all relevant save information for logging/loading for persistence between sessions. 
      * This constructor is used outside of LevelData for managing saves.
      * 
