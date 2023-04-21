@@ -12,8 +12,9 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
+
 /**
- * The `GridRenderer` class is responsible for rendering the game grid and the player's circle. It extends `JPanel` and uses a `Camera` object
+ * The `GridRenderer` class is responsible for rendering the game grid and the player's texture. It extends `JPanel` and uses a `Camera` object
  * to apply a translation transform to the grid and circle based on the camera's position.
  */
 public class GridRenderer extends JPanel {
@@ -23,29 +24,41 @@ public class GridRenderer extends JPanel {
     private static final int TILE_SIZE = 50;
 
     
-    
     private final Camera camera;
     private final Player player;
     private final LevelData levelData;
     private final Grid grid;
     private final Inventory inventory;
+    
     private int screenWidth;
     private int screenHeight;
     private TextureEngine textureEngine;
-    
     private int GRID_WIDTH;
     private int GRID_HEIGHT;
+    
     
     static {
         new TextureEngine();
     }
     
+    
+    /**
+    The Placer interface provides a method to place an object on a tile in the game grid based on the given Tile and Inventory.
+    */
     public interface Placer {
         void place(Tile tile, Inventory inventory);
     }
     
+    
     /**
      * Constructs a new `GridRenderer` object with the specified `Camera`, `Player`, and `LevelData`.
+     *
+     * @param camera The camera object used to apply a translation transform.
+     * @param player The player object to render on the grid.
+     * @param levelData The level data for the current level.
+     * @param inventory The inventory of the player.
+     * @param gridWidth The width of the game grid.
+     * @param gridHeight The height of the game grid.
      */
     public GridRenderer(Camera camera, Player player, LevelData levelData, Inventory inventory, int gridWidth, int gridHeight) {
         this.camera = camera;
@@ -61,36 +74,51 @@ public class GridRenderer extends JPanel {
         setPreferredSize(new Dimension(screenWidth, screenHeight));
     }
     
+    
     /**
      * Returns the current X coordinate of the player's circle.
+     *
+     * @return The current X coordinate of the player's circle.
      */
     public int getCircleX() {
         return player.getX();
     }
     
+    
     /**
      * Returns the current Y coordinate of the player's circle.
+     *
+     * @return The current Y coordinate of the player's circle.
      */
     public int getCircleY() {
         return player.getY();
     }
     
+    
     /**
      * Returns the width of the game screen.
+     *
+     * @return The width of the game screen.
      */
     public int getScreenWidth() {
         return screenWidth;
     }
     
+    
     /**
      * Returns the height of the game screen.
+     *
+     * @return The height of the game screen.
      */
     public int getScreenHeight() {
         return screenHeight;
     }
     
+    
     /**
      * Paints the grid and the player's circle on the panel using the specified `Graphics` object.
+     *
+     * @param g The graphics object used to paint the components on the panel.
      */
     @Override
     public void paintComponent(Graphics g) {
@@ -131,7 +159,9 @@ public class GridRenderer extends JPanel {
     }
     
     /**
-     * Draws the player's circle on the panel using the specified `Graphics2D` object.
+     * Draws the player texture on the panel using the specified `Graphics2D` object.
+     *
+     * @param g2d The graphics object used to draw the player's circle.
      */
     private void drawPlayer(Graphics2D g2d) {
         int x = player.getX() - PLAYER_SIZE;
@@ -139,6 +169,12 @@ public class GridRenderer extends JPanel {
         g2d.drawImage(textureEngine.playerTexture, x, y, 2 * PLAYER_SIZE, 2 * PLAYER_SIZE, null);
     }
     
+
+    /**
+     * Draws the resources on the panel using the specified `Graphics2D` object.
+     *
+     * @param g2d The graphics object used to draw the resources.
+     */
     private void drawResources(Graphics2D g2d) {
         // Set color and font
         g2d.setColor(Color.BLACK);
@@ -162,7 +198,13 @@ public class GridRenderer extends JPanel {
         g2d.drawString("Copper Ingot: " + copperIngot, 10, 180);
         g2d.drawString("Gold Ingot: " + goldIngot, 10, 210);
     }
-
+    
+    
+    /**
+    Handles the placement of an object on a tile based on the given MouseEvent and Placer.
+    @param e The mouse event that triggered the placement.
+    @param placer The Placer that will place the object on the tile.
+    */
     private void handlePlacement(MouseEvent e, Placer placer) {
         int x = e.getX();
         int y = e.getY();
@@ -187,7 +229,12 @@ public class GridRenderer extends JPanel {
         }
     }
     
-   
+
+    /**
+    * This method handles the placement of a miner object on the game board based on a given MouseEvent.
+    *
+    * @param e The MouseEvent that occurred.
+    */
     public void handleMinerPlacement(MouseEvent e) {
         handlePlacement(e, (tile, inventory) -> {
             // Place a miner on the tile, if there's no miner yet
@@ -199,6 +246,11 @@ public class GridRenderer extends JPanel {
         });
     }
 
+    /**
+    * This method handles the placement of a smelter object on the game board based on a given MouseEvent.
+    *
+    * @param e The MouseEvent that occurred.
+    */
     public void handleSmelterPlacement(MouseEvent e) {
         handlePlacement(e, (tile, inventory) -> {
             // Place a smelter on the tile, if there's no smelter yet
@@ -209,10 +261,15 @@ public class GridRenderer extends JPanel {
             }
         });
     }
-    
-        public void handleSamPltPlacement(MouseEvent e) {
+
+    /**
+    * This method handles the placement of a SAM platform object on the game board based on a given MouseEvent.
+    *
+    * @param e The MouseEvent that occurred.
+    */
+    public void handleSamPltPlacement(MouseEvent e) {
         handlePlacement(e, (tile, inventory) -> {
-            // Place a smelter on the tile, if there's no smelter yet
+            // Place a SAM platform on the tile, if there's no SAM platform yet
             if (tile.getSamPlatform() == null && !tile.hasResources()) {
                 SAM_PLATFORM samPlatform = new SAM_PLATFORM(tile);
                 tile.setSamPlatform(samPlatform);

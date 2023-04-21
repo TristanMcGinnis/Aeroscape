@@ -1,14 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package team2.aeroscape;
 import javax.swing.*;
+
+
 /**
- *
- * @author nndcp
- */
+The LoadGameFrame class is responsible for loading the game.
+*/
 public class LoadGameFrame extends JFrame {
+    
+    /**
+     * The default constructor (placeholder).
+     */
     public LoadGameFrame() {
         
     }

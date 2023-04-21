@@ -7,12 +7,14 @@ import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.sound.sampled.Clip;
 import javax.swing.SwingUtilities;
-/**
- * CS 321-01 TEAM 2
- * AEROSCAPE
- */
 
-// This class represents the main game engine.
+/**
+ * This class represents the main game engine for the Aeroscape game.
+ * @author Jacob Neel
+ * @author Tristan McGinnis
+ * @author Nick Davis
+ * @author Gavin Brady
+ */
 public class Aeroscape {
     
     // Initialize variables
@@ -27,7 +29,12 @@ public class Aeroscape {
     private boolean running;
     private boolean isZooming;
 
-
+    /**
+     * Constructor for the Aeroscape game engine.
+     * @param playerName Name of the player.
+     * @param gridWidth Width of the grid.
+     * @param gridHeight Height of the grid.
+     */
     public Aeroscape(String playerName, int gridWidth, int gridHeight) {
         int playerStartX = (gridWidth * 50) / 2;
         int playerStartY = (gridHeight * 50) / 2;
@@ -44,15 +51,20 @@ public class Aeroscape {
         running = true;
     }
     
+    /**
+     * Main method for the game engine.
+     * @param args Command-line arguments.
+     */
     public static void main(String[] args) {
         new MainMenu();
         System.out.println("Menu Initialized");
     }
     
-    
-    // Initialization method
+    /**
+     * Initialization method for the game engine.
+     * Initializes game entities and other settings.
+     */
     public void init() {
-        // Initialize game entities and other settings here
         System.out.println("Init");
 
         audioEngine.loadAudio("MainMusic", "src/main/resources/sfx/MainMusic.wav");
@@ -62,7 +74,10 @@ public class Aeroscape {
         new Thread(this::gameLoop).start();
     }
     
-
+    /**
+     * Creates and initializes the game window.
+     * @return The JFrame representing the game window.
+     */
     private JFrame createGameWindow() {
         JFrame frame = new JFrame("Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -73,6 +88,11 @@ public class Aeroscape {
         return frame;
     }
 
+    
+    /**
+     * Adds input listeners to the game window.
+     * @param frame The JFrame representing the game window.
+     */
     private void addListeners(JFrame frame) {
         frame.addKeyListener(keyboardManager);
         frame.addMouseListener(mouseManager);
@@ -87,6 +107,10 @@ public class Aeroscape {
         gridRenderer.repaint();
     }
     
+    
+    /**
+     * Updates the camera position based on the player's position.
+     */
     private void updateCameraPosition() {
         int screenWidth = gridRenderer.getScreenWidth();
         int screenHeight = gridRenderer.getScreenHeight();
@@ -98,38 +122,41 @@ public class Aeroscape {
     }
 
 
-    // Game loop method
     /**
-    * This game loop is responsible for updating and rendering the game entities. It works by calculating the time difference
-    * since the last update and adding it to a delta variable. If the delta time is greater than or equal to 1, the game entities
-    * are updated and the delta time is decremented. The game entities are then rendered. This loop runs continuously while the 
-    * running flag is set to true, ensuring that the game is constantly updating and rendering.
-    */
-public void gameLoop() {
-        System.out.println("Game Loop Initialized");
-        final double updateTime = 1000/60; //60 Updates per second
-        double lastUpdateTime = System.currentTimeMillis(); 
-        double delta = 0;
-        
-        
-        while (running) {
-            double now = System.currentTimeMillis();
-            delta = (now - lastUpdateTime);
-            lastUpdateTime = now;
-            
-            
-            update(updateTime);
-            while (delta < updateTime) {
-                delta = System.currentTimeMillis() - lastUpdateTime;
+     * The game loop is responsible for updating and rendering the game entities. It works by calculating the time difference
+     * since the last update and adding it to a delta variable. If the delta time is greater than or equal to 1, the game entities
+     * are updated and the delta time is decremented. The game entities are then rendered. This loop runs continuously while the 
+     * running flag is set to true, ensuring that the game is constantly updating and rendering.
+     */
+    public void gameLoop() {
+            System.out.println("Game Loop Initialized");
+            final double updateTime = 1000/60; //60 Updates per second
+            double lastUpdateTime = System.currentTimeMillis(); 
+            double delta = 0;
+
+
+            while (running) {
+                double now = System.currentTimeMillis();
+                delta = (now - lastUpdateTime);
+                lastUpdateTime = now;
+
+
+                update(updateTime);
+                while (delta < updateTime) {
+                    delta = System.currentTimeMillis() - lastUpdateTime;
+                }
+                SwingUtilities.invokeLater(() -> {
+                    render();
+                });
+                //sync(); // Synchronize the game loop if needed
             }
-            SwingUtilities.invokeLater(() -> {
-                render();
-            });
-            //sync(); // Synchronize the game loop if needed
         }
-    }
 
-
+    
+    /**
+    * Updates game entities and camera position.
+    * @param delta The time elapsed since the last update.
+    */
     public void update(double delta) {
         // Update game entities/camera here
         try {
@@ -202,9 +229,9 @@ public void gameLoop() {
     }
 
 
-
-    
-    // Render game entities method
+    /**
+     * Renders the game entities.
+     */
     public void render() {
         try {
            gridRenderer.repaint();
@@ -215,15 +242,18 @@ public void gameLoop() {
     }
 
     
-    // Synchronize game loop method
+    /**
+     * Synchronize the game loop if needed.
+     */
     public void sync() {
         // Synchronize game loop here, if needed
     }
     
     
-    // Method to initialize/update circle and camera positions
+    /**
+     * Initializes and updates camera position
+     */
     public void initializePositions() {
-        // Set the initial camera position based on the player's position
         int screenWidth = gridRenderer.getWidth();
         int screenHeight = gridRenderer.getHeight();
         camera.follow(player.getX(), player.getY(), screenWidth, screenHeight);
